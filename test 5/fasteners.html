@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fasteners Specification</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .char-limit { color: red; }
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-word;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+        }
+        .hidden { display: none; }
+        
+        /* New consistent styling */
+        .input-group-text {
+            min-width: 65px;
+            width: auto;
+            padding: 0 8px;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .input-group {
+            flex-wrap: nowrap;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+
+        label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-row > [class*="col-"] {
+            margin-bottom: 15px;
+        }
+
+        .custom-type-input {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 3px solid #dee2e6;
+        }
+
+        @media (max-width: 768px) {
+            .input-group-text {
+                width: auto;
+                min-width: 45px;
+            }
+            
+            .form-row > [class*="col-"] {
+                margin-bottom: 15px;
+            }
+        }
+
+        #fullDescription {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            min-height: 38px;
+        }
+        
+        .output-group {
+            margin-top: 20px;
+        }
+        .navbar-logo {
+            height: 50px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Fasteners Specification</h1>
+        <form id="fastenerForm">
+            <div class="form-row">
+                <div class="col-md-6 form-group">
+                    <label>Material:</label>
+                    <select id="fastener-material" class="form-control">
+                        <option value="">-- None --</option>
+                        <option>Stainless Steel</option>
+                        <option>Mild Steel</option>
+                        <option>Galvanised Iron</option>
+                        <option>Aluminium</option>
+                        <option>Copper</option>
+                        <option>Plastic</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="text" id="custom-material" class="form-control custom-type-input hidden" placeholder="Enter custom material">
+                </div>
+                
+                <div class="col-md-6 form-group">
+                    <label>Fastener Type:</label>
+                    <select id="fastener-type" class="form-control" required>
+                        <option value="">-- Required --</option>
+                        <option>Bolt</option>
+                        <option>Nut</option>
+                        <option>Washer</option>
+                        <option>Bolt and Nut</option>
+                        <option>Bolt, Nut and Washer</option>
+                        <option>Rowl Bolt</option>
+                        <option>Rivets</option>
+                        <option>Nails</option>
+                        <option>U Nails</option>
+                        <option>U-bolt</option>
+                        <option>J-bolt</option>
+                        <option>Self Tapping Screw</option>
+                        <option>Wood Screw</option>
+                        <option>Roofing Nails</option>
+                        <option>Gypsum Screw</option>
+                        <option>Allen Bolt</option>
+                        <option>Counter Sunk Screw</option>
+                        <option>Spring Washer</option>
+                        <option>Flat Washer</option>
+                        <option>Twisted Pallet Nails</option>
+                        <option>D-shackle</option>
+                        <option>Guy Clips</option>
+                        <option>Ferrules</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="text" id="custom-fastener-type" class="form-control custom-type-input hidden" placeholder="Enter custom type">
+                    <div class="invalid-feedback">Please select a Fastener type</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-4 form-group">
+                    <label>Head Type:</label>
+                    <select id="head-type" class="form-control">
+                        <option value="">-- None --</option>
+                        <option>CSK</option>
+                        <option>HEX</option>
+                        <option>HEX WASHER</option>
+                        <option>FLAT</option>
+                        <option>OVAL</option>
+                        <option>PAN</option>
+                        <option>PAN WASHER</option>
+                        <option>TRUSS</option>
+                        <option>ROUND</option>
+                        <option>BUTTON</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-4 form-group">
+                    <label>Thread Type:</label>
+                    <select id="thread-type" class="form-control">
+                        <option value="">-- None --</option>
+                        <option value="FT">Full Thread (FT)</option>
+                        <option value="HT">Half Thread (HT)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <!-- Diameter -->
+                        <div class="col-md-6 form-group">
+                            <label>Diameter:</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       id="fastener-diameter" 
+                                       class="form-control" 
+                                       maxlength="6">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">M</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Length -->
+                        <div class="col-md-6 form-group">
+                            <label>Length:</label>
+                            <div class="input-group">
+                                <input type="number" 
+                                       id="fastener-length" 
+                                       class="form-control" 
+                                       min="0">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">MM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+            </div>
+
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" onclick="generateName()">Generate Name</button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+            </div>
+        </form>
+
+        <div class="output-group">
+            <div class="form-group">
+                <label>Generated Specification:</label>
+                <div id="output" class="editable-output" contenteditable="true" onblur="validateSpecLength(this)"></div>
+                <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Full description:</label>
+                <textarea class="form-control" id="fullDescription" rows="4"></textarea>
+            </div>
+        </div>
+        <script src="shared-specs.js"></script>
+    <script>
+        const materialMap = {
+            'Stainless Steel': 'SS',
+            'Mild Steel': 'MS',
+            'Galvanised Iron': 'GI',
+            'Aluminium': 'AL',
+            'Copper': 'CU',
+            'Plastic': 'PLASTIC'
+        };
+    
+        const threadTypeMap = {
+            'FT': 'Full Thread',
+            'HT': 'Half Thread'
+        };
+    
+        const removalOrder = ['thread-type', 'material', 'head-type', 'diameter', 'length'];
+        const MAX_SPEC_LENGTH = 40;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Custom field handling
+            const handleCustomField = (selectId, inputId) => {
+                const select = document.getElementById(selectId);
+                const input = document.getElementById(inputId);
+                
+                select.addEventListener('change', function() {
+                    const show = this.value === 'other';
+                    input.classList.toggle('hidden', !show);
+                    if(show) input.focus();
+                    updateLiveCounter();
+                });
+            };
+    
+            handleCustomField('fastener-material', 'custom-material');
+            handleCustomField('fastener-type', 'custom-fastener-type');
+    
+            // Input validation cleanup
+            document.querySelectorAll('input, select').forEach(element => {
+                element.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    updateLiveCounter();
+                });
+            });
+    
+            // Diameter input sanitization
+            document.getElementById('fastener-diameter').addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
+    
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = [
+                {
+                    id: 'fastener-type',
+                    check: () => document.getElementById('fastener-type').value === 'other' ?
+                        !!document.getElementById('custom-fastener-type').value.trim() :
+                        !!document.getElementById('fastener-type').value
+                }
+            ];
+    
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if(!field.check()) {
+                    element.classList.add('is-invalid');
+                    isValid = false;
+                }
+            });
+    
+            return isValid;
+        }
+    
+        function buildSpecFields() {
+            const fields = [];
+    
+            // Material
+            const materialSelect = document.getElementById('fastener-material');
+            if (materialSelect.value) {
+                const materialValue = materialSelect.value === 'other' ?
+                    document.getElementById('custom-material').value.trim().toUpperCase() :
+                    materialMap[materialSelect.value] || materialSelect.value.toUpperCase();
+                
+                fields.push({ key: 'material', value: materialValue });
+            }
+    
+            // Fastener Type
+            const fastenerTypeSelect = document.getElementById('fastener-type');
+            if (fastenerTypeSelect.value) {
+                const typeValue = fastenerTypeSelect.value === 'other' ?
+                    document.getElementById('custom-fastener-type').value.trim().toUpperCase() :
+                    fastenerTypeSelect.options[fastenerTypeSelect.selectedIndex].text.toUpperCase();
+                
+                fields.push({ key: 'type', value: typeValue });
+            }
+    
+            // Head Type
+            const headType = document.getElementById('head-type').value;
+            if(headType) {
+                fields.push({ key: 'head-type', value: headType.toUpperCase() });
+            }
+    
+            // Diameter
+            const diameter = document.getElementById('fastener-diameter').value;
+            if(diameter) {
+                fields.push({ key: 'diameter', value: `M${diameter}` });
+            }
+    
+            // Length
+            const length = document.getElementById('fastener-length').value;
+            if(length) {
+                fields.push({ key: 'length', value: `${length}MM` });
+            }
+    
+            // Thread Type
+            const threadType = document.getElementById('thread-type').value;
+            if(threadType) {
+                fields.push({ key: 'thread-type', value: threadType });
+            }
+    
+            return fields;
+        }
+    
+        function buildFullDescription() {
+            const parts = [];
+    
+            // Material
+            const materialSelect = document.getElementById('fastener-material');
+            if(materialSelect.value) {
+                const material = materialSelect.value === 'other' ?
+                    document.getElementById('custom-material').value.trim() :
+                    materialSelect.options[materialSelect.selectedIndex].text;
+                parts.push(material);
+            }
+    
+            // Fastener Type
+            const fastenerTypeSelect = document.getElementById('fastener-type');
+            if(fastenerTypeSelect.value) {
+                const type = fastenerTypeSelect.value === 'other' ?
+                    document.getElementById('custom-fastener-type').value.trim() :
+                    fastenerTypeSelect.options[fastenerTypeSelect.selectedIndex].text;
+                parts.push(type);
+            }
+    
+            // Head Type
+            const headType = document.getElementById('head-type').value;
+            if(headType) parts.push(headType);
+    
+            // Diameter
+            const diameter = document.getElementById('fastener-diameter').value;
+            if(diameter) parts.push(`M${diameter}`);
+    
+            // Length
+            const length = document.getElementById('fastener-length').value;
+            if(length) parts.push(`${length}MM`);
+    
+            // Thread Type
+            const threadType = document.getElementById('thread-type').value;
+            if(threadType) parts.push(threadTypeMap[threadType] || threadType);
+    
+            return parts.join(' ');
+        }
+    
+        function truncateSpec(fields) {
+            let currentFields = [...fields];
+            let specString = currentFields.map(f => f.value).join(' ');
+            
+            while(specString.length > MAX_SPEC_LENGTH && currentFields.length > 0) {
+                let removed = false;
+                
+                for(const key of removalOrder) {
+                    const index = currentFields.findIndex(f => f.key === key);
+                    if(index !== -1) {
+                        currentFields.splice(index, 1);
+                        removed = true;
+                        break;
+                    }
+                }
+                
+                if(!removed) break;
+                specString = currentFields.map(f => f.value).join(' ');
+            }
+            
+            return specString;
+        }
+    
+        function updateLiveCounter() {
+            try {
+                const fields = buildSpecFields();
+                const shortSpec = truncateSpec(fields);
+                const count = shortSpec.length;
+                
+                document.getElementById('charCounter').textContent = `${count}/${MAX_SPEC_LENGTH} characters`;
+                document.getElementById('charCounter').style.color = count > MAX_SPEC_LENGTH ? 'red' : '#6c757d';
+            } catch {
+                document.getElementById('charCounter').textContent = `0/${MAX_SPEC_LENGTH} characters`;
+            }
+        }
+        
+        function validateSpecLength(element) {
+            const content = element.textContent.trim();
+            const count = content.length;
+            const charCounter = document.getElementById('charCounter');
+            
+            charCounter.textContent = `${count}/${MAX_SPEC_LENGTH} characters`;
+            charCounter.style.color = count > MAX_SPEC_LENGTH ? 'red' : '#6c757d';
+            
+            if (count > MAX_SPEC_LENGTH) {
+                element.classList.add('border-danger');
+            } else {
+                element.classList.remove('border-danger');
+            }
+        }
+    
+        function generateName() {
+            const output = document.getElementById('output');
+            const fullDesc = document.getElementById('fullDescription');
+            
+            // Reset states
+            output.textContent = '';
+            output.style.color = 'inherit';
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    
+            if(!validateForm()) {
+                output.style.color = 'red';
+                output.textContent = 'Please correct the highlighted fields';
+                fullDesc.value = '';
+                return;
+            }
+    
+            try {
+                const fields = buildSpecFields();
+                const shortSpec = truncateSpec(fields);
+                const fullSpec = buildFullDescription();
+    
+                output.textContent = shortSpec;
+                fullDesc.value = fullSpec;
+    
+                if(shortSpec.length > MAX_SPEC_LENGTH) {
+                    output.style.color = 'red';
+                }
+                
+                // Update character counter
+                validateSpecLength(output);
+            } catch(error) {
+                output.style.color = 'red';
+                output.textContent = error.message;
+                fullDesc.value = '';
+            }
+        }
+    
+        function resetForm() {
+            document.getElementById('fastenerForm').reset();
+            document.querySelectorAll('.hidden').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.getElementById('charCounter').textContent = `0/${MAX_SPEC_LENGTH} characters`;
+            document.getElementById('output').textContent = '';
+            document.getElementById('fullDescription').value = '';
+        }
+    </script>
+</body>
+</html>

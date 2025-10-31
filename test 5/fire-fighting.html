@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Fighting Equipment Specification</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .dynamic-section { display: none; }
+        
+        #output { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-word;
+            font-size: 0.9rem;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            min-height: 38px;
+        }
+        .is-invalid { border-color: #dc3545 !important; }
+
+        .invalid-feedback { display: none; color: #dc3545; font-size: 0.875em; }
+
+        .active-section { display: block !important; }
+
+        .unit-group { width: 110px; }
+        
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+    
+        .sub-type-group {
+            margin: 15px 0;
+            padding-left: 15px;
+            border-left: 3px solid #dee2e6;
+        }
+    
+        .radio-group { 
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+    
+        .input-group-text {
+            min-width: 65px; /* Increased from 45px */
+            width: auto;
+            padding: 0 8px;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .input-group {
+            flex-wrap: nowrap;
+        }
+    
+        #additionalSpecs, #fullDescription {
+            resize: vertical;
+            min-height: 38px;
+        }
+    
+        #fullDescription {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+        }
+    
+        .mt-4 .btn-group {
+            gap: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+    
+        label {
+            font-weight: 500;
+            color: #495057;
+        }
+    
+        @media (max-width: 768px) {
+            .form-row > [class*="col-"] {
+                margin-bottom: 15px;
+            }
+            
+            .input-group-text {
+                width: auto;
+                min-width: 45px;
+            }
+        }
+    .navbar-logo {
+  height: 50px;
+  width: auto;
+}
+  </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Fire Fighting Equipment Specification</h1>
+        <form id="fireForm">
+            <!-- Equipment Type Selector -->
+            <div class="form-group">
+                <select class="form-control" id="equipmentType" onchange="toggleSections()" required>
+                    <option value="">Select Equipment Type</option>
+                    <option>Fire Extinguisher</option>
+                    <option>Fire Hose</option>
+                    <option>Fire Nozzle</option>
+                    <option>Hydrant</option>
+                    <option>Fire Alarm</option>
+                    <option>Sprinkler Head</option>
+                    <option>Fire Suit</option>
+                </select>
+            </div>
+
+            <!-- Fire Extinguisher Section -->
+            <div class="dynamic-section" id="extinguisherSection">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Fire Class Rating:</label>
+                        <select class="form-control" id="fireClass" required>
+                            <option>CLASS A</option>
+                            <option>CLASS B</option>
+                            <option>CLASS C</option>
+                            <option>CLASS D</option>
+                            <option>CLASS K</option>
+                            <option>ABC MULTIPURPOSE</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Capacity/Size:</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="capacity" min="0" required>
+                            <select class="form-control" id="capacityUnit">
+                                <option>L</option>
+                                <option>KG</option>
+                                <option>MM</option>
+                                <option>Inches</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fire Hose Section -->
+            <div class="dynamic-section" id="hoseSection">
+                <div class="form-row">
+                    <div class="col-md-4 form-group">
+                        <label>Hose Type:</label>
+                        <select class="form-control" id="hoseType" onchange="toggleHoseSubtypes()" required>
+                            <option value="">Select Type</option>
+                            <option value="suction">Suction Hose</option>
+                            <option value="delivery">Delivery Hose</option>
+                            <option value="reel">Hose Reel</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-8 form-group">
+                        <div id="suctionSubtypes" class="sub-type-group" style="display:none">
+                            <div class="radio-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="suctionType" id="armored">
+                                    <label class="form-check-label">Armored</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="suctionType" id="unarmored">
+                                    <label class="form-check-label">Unarmored</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="deliverySubtypes" class="sub-type-group" style="display:none">
+                            <select class="form-control" id="deliveryType" required>
+                                <option>Rubber Line</option>
+                                <option>RRL</option>
+                                <option>Canvas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3 form-group">
+                        <label>Length:</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="hoseLength" min="0" required>
+                            <select class="form-control unit-group" id="lengthUnit">
+                                <option>M</option>
+                                <option>FT</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Diameter:</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="hoseDiameter" min="0" required>
+                            <span class="input-group-text">Inches</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Pressure Rating:</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="pressure" min="0">
+                            <select class="form-control unit-group" id="pressureUnit">
+                                <option>BAR</option>
+                                <option>PSI</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fire Nozzle Section -->
+            <div class="dynamic-section" id="nozzleSection">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Nozzle Type:</label>
+                        <select class="form-control" id="nozzleType" required>
+                            <option>Smooth-bore</option>
+                            <option>Constant Gallonage Spray</option>
+                            <option>Automatic Spray</option>
+                            <option>Single-mode</option>
+                            <option>Heavy duty foam</option>
+                            <option>Light duty foam</option>
+                            <option>Water spray</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Outlet Diameter</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="outletDia" min="0" required>
+                            <span class="input-group-text">Inches</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Hose Tail Diameter</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="hoseTailDia" min="0" required>
+                            <span class="input-group-text">Inches</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hydrant Section -->
+            <div class="dynamic-section" id="hydrantSection">
+                <div class="form-row">
+                    <div class="col-md-4 form-group">
+                        <label>Hydrant Type:</label>
+                        <select class="form-control" id="hydrantType" required>
+                            <option>Wet</option>
+                            <option>Dry</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <div class="radio-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="controlType" id="controllable">
+                                <label class="form-check-label">Controllable</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="controlType" id="nonControllable">
+                                <label class="form-check-label">Non-controllable</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <div class="radio-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="wayType" id="twoWay">
+                                <label class="form-check-label">Two Way</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="wayType" id="threeWay">
+                                <label class="form-check-label">Three Way</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fire Alarm Section -->
+            <div class="dynamic-section" id="alarmSection">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Alarm Type:</label>
+                        <select class="form-control" id="alarmType" onchange="toggleAlarmSubtypes()" required>
+                            <option value="">Select Type</option>
+                            <option value="detector">Detector</option>
+                            <option value="notifier">Alarm Notifier</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <div id="detectorSubtypes" class="sub-type-group" style="display:none">
+                            <select class="form-control" id="detectorType" required>
+                                <option>Heat Detector</option>
+                                <option>Ionization Smoke</option>
+                                <option>Photoelectric Smoke</option>
+                                <option>Combined Smoke</option>
+                                <option>Carbon Monoxide</option>
+                                <option>Manual Call Point</option>
+                                <option>Hydrant Button</option>
+                            </select>
+                        </div>
+                        <div id="notifierSubtypes" class="sub-type-group" style="display:none">
+                            <select class="form-control" id="notifierType" required>
+                                <option>Siren</option>
+                                <option>Speaker</option>
+                                <option>Bell</option>
+                                <option>Strobe Light</option>
+                                <option>Fire Alarm Panel</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sprinkler Head Section -->
+            <div class="dynamic-section" id="sprinklerSection">
+                <div class="form-group">
+                    <label>Sprinkler Type:</label>
+                    <select class="form-control" id="sprinklerType" required>
+                        <option>Conventional</option>
+                        <option>Upright</option>
+                        <option>Vertical Sidewall</option>
+                        <option>Horizontal Sidewall</option>
+                        <option>Concealed Horizontal</option>
+                        <option>Pendent</option>
+                        <option>Recessed Pendent</option>
+                        <option>Concealed Pendent</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fire Suit Section -->
+            <div class="dynamic-section" id="suitSection">
+                <div class="form-group">
+                    <label>Suit Type:</label>
+                    <select class="form-control" id="suitType" required>
+                        <option>Approach</option>
+                        <option>Proximity</option>
+                        <option>Entry</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Additional Specifications -->
+            <div class="form-group">
+                <label>Additional Specifications:</label>
+                <textarea class="form-control" id="additionalSpecs" rows="1"></textarea>
+            </div>
+
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" onclick="generateSpec()">Generate</button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                <span class="char-count" id="charCounter"></span>
+            </div>
+        </form>
+
+        <!-- Changed from div to textarea for editing -->
+        <textarea id="output" class="mt-4 form-control" rows="2" placeholder="Generated specification will appear here"></textarea>
+
+        <div id="output1" class="mt-4">
+            <label>Full description:</label>
+            <!-- Removed readonly attribute -->
+            <textarea class="form-control" id="fullDescription" rows="4"></textarea>
+        </div>
+    </div>
+
+    <script src="shared-specs.js"></script>
+
+    <script>
+        const removalOrders = {
+            'Fire Extinguisher': ['additional', 'capacity', 'fireClass'],
+            'Fire Hose': ['additional', 'pressure', 'diameter', 'length'],
+            'Fire Nozzle': ['additional', 'hoseTailDia', 'outletDia'],
+            'Hydrant': ['additional', 'wayType', 'controlType'],
+            'Fire Alarm': ['additional', 'subtype'],
+            'Sprinkler Head': ['additional'],
+            'Fire Suit': ['additional']
+        };
+    
+        function truncateSpec(fields, type) {
+            let currentFields = [...fields];
+            let specString = currentFields.map(f => f.value).join(' ');
+            const order = removalOrders[type] || [];
+    
+            while(specString.length > 40 && currentFields.length > 0) {
+                const fieldToRemove = order.find(key => 
+                    currentFields.some(f => f.key === key)
+                );
+                if(!fieldToRemove) break;
+    
+                const index = currentFields.findIndex(f => f.key === fieldToRemove);
+                currentFields.splice(index, 1);
+                specString = currentFields.map(f => f.value).join(' ');
+            }
+            return specString;
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    updateLiveCounter();
+                });
+            });
+    
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.querySelectorAll(`input[name="${this.name}"]`).forEach(other => {
+                        other.parentElement.parentElement.classList.remove('is-invalid');
+                    });
+                    updateLiveCounter();
+                });
+            });
+    
+            toggleSections();
+            toggleHoseSubtypes();
+            toggleAlarmSubtypes();
+        });
+    
+        function toggleSections() {
+            const type = document.getElementById('equipmentType').value;
+            const sections = {
+                'Fire Extinguisher': 'extinguisherSection',
+                'Fire Hose': 'hoseSection',
+                'Fire Nozzle': 'nozzleSection',
+                'Hydrant': 'hydrantSection',
+                'Fire Alarm': 'alarmSection',
+                'Sprinkler Head': 'sprinklerSection',
+                'Fire Suit': 'suitSection'
+            };
+    
+            document.querySelectorAll('.dynamic-section').forEach(section => {
+                section.classList.remove('active-section');
+                section.style.display = 'none';
+            });
+    
+            if (type && sections[type]) {
+                const section = document.getElementById(sections[type]);
+                section.classList.add('active-section');
+                section.style.display = 'block';
+            }
+            updateLiveCounter();
+        }
+    
+        function toggleHoseSubtypes() {
+            const hoseType = document.getElementById('hoseType').value;
+            document.querySelectorAll('#hoseSection .sub-type-group').forEach(el => el.style.display = 'none');
+            if (hoseType === 'suction') {
+                document.getElementById('suctionSubtypes').style.display = 'block';
+            } else if (hoseType === 'delivery') {
+                document.getElementById('deliverySubtypes').style.display = 'block';
+            }
+            updateLiveCounter();
+        }
+    
+        function toggleAlarmSubtypes() {
+            const alarmType = document.getElementById('alarmType').value;
+            document.querySelectorAll('#alarmSection .sub-type-group').forEach(el => el.style.display = 'none');
+            if (alarmType === 'detector') {
+                document.getElementById('detectorSubtypes').style.display = 'block';
+            } else if (alarmType === 'notifier') {
+                document.getElementById('notifierSubtypes').style.display = 'block';
+            }
+            updateLiveCounter();
+        }
+    
+        function validateForm() {
+            let isValid = true;
+            const type = document.getElementById('equipmentType').value;
+            
+            if(!type) {
+                document.getElementById('equipmentType').classList.add('is-invalid');
+                isValid = false;
+            }
+    
+            const activeSection = document.querySelector('.dynamic-section.active-section');
+            if(activeSection) {
+                activeSection.querySelectorAll('[required]').forEach(element => {
+                    if(!element.value) {
+                        element.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                });
+    
+                activeSection.querySelectorAll('.radio-group').forEach(group => {
+                    const radios = group.querySelectorAll('input[type="radio"]');
+                    const checked = Array.from(radios).some(radio => radio.checked);
+                    if(!checked) {
+                        group.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                });
+    
+                if(type === 'Fire Hose' && !document.getElementById('hoseType').value) {
+                    document.getElementById('hoseType').classList.add('is-invalid');
+                    isValid = false;
+                }
+            }
+            return isValid;
+        }
+    
+        function buildSpecFields() {
+            const type = document.getElementById('equipmentType').value;
+            const fields = [];
+            const additional = document.getElementById('additionalSpecs').value.trim().toUpperCase();
+    
+            switch(type) {
+                case 'Fire Extinguisher':
+                    fields.push(
+                        { key: 'type', value: 'FIRE-EXTINGUISHER' },
+                        { key: 'fireClass', value: document.getElementById('fireClass').value },
+                        { key: 'capacity', value: document.getElementById('capacity').value + 
+                                                document.getElementById('capacityUnit').value }
+                    );
+                    break;
+    
+                case 'Fire Hose':
+                    const hoseType = document.getElementById('hoseType').value;
+                    let hoseSpec = 'FIRE HOSE ';
+                    if (hoseType === 'suction') {
+                        const subtype = document.querySelector('input[name="suctionType"]:checked');
+                        hoseSpec += subtype ? `SUCTION ${subtype.nextElementSibling.textContent.toUpperCase()}` : '';
+                    } else if (hoseType === 'delivery') {
+                        const deliveryType = document.getElementById('deliveryType').value;
+                        hoseSpec += `DELIVERY ${deliveryType.toUpperCase()}`;
+                    } else {
+                        hoseSpec += 'REEL';
+                    }
+    
+                    fields.push(
+                        { key: 'type', value: hoseSpec },
+                        { key: 'length', value: document.getElementById('hoseLength').value + 
+                                              document.getElementById('lengthUnit').value },
+                        { key: 'diameter', value: document.getElementById('hoseDiameter').value + '"' },
+                        { key: 'pressure', value: document.getElementById('pressure').value + 
+                                                document.getElementById('pressureUnit').value }
+                    );
+                    break;
+    
+                case 'Fire Nozzle':
+                    fields.push(
+                        { key: 'type', value: document.getElementById('nozzleType').value.toUpperCase().replace(/ /g, '-') + '-NOZZLE' },
+                        { key: 'outlet', value: document.getElementById('outletDia').value + '"' },
+                        { key: 'hoseTail', value: document.getElementById('hoseTailDia').value + '"' }
+                    );
+                    break;
+    
+                case 'Hydrant':
+                    const controlType = document.querySelector('input[name="controlType"]:checked');
+                    const wayType = document.querySelector('input[name="wayType"]:checked');
+                    fields.push(
+                        { key: 'type', value: document.getElementById('hydrantType').value.toUpperCase() + '-HYDRANT' },
+                        { key: 'control', value: controlType?.nextElementSibling.textContent.toUpperCase() },
+                        { key: 'way', value: wayType?.nextElementSibling.textContent.toUpperCase() }
+                    );
+                    break;
+    
+                case 'Fire Alarm':
+                    const alarmType = document.getElementById('alarmType').value;
+                    const subtype = alarmType === 'detector' ? 
+                        document.getElementById('detectorType').value : 
+                        document.getElementById('notifierType').value;
+                    fields.push(
+                        { key: 'type', value: 'FIRE-ALARM' },
+                        { key: 'subtype', value: subtype.toUpperCase().replace(/ /g, '-') }
+                    );
+                    break;
+    
+                case 'Sprinkler Head':
+                    fields.push(
+                        { key: 'type', value: 'SPRINKLER-HEAD' },
+                        { key: 'subtype', value: document.getElementById('sprinklerType').value.toUpperCase().replace(/ /g, '-') }
+                    );
+                    break;
+    
+                case 'Fire Suit':
+                    fields.push(
+                        { key: 'type', value: 'FIRE-SUIT' },
+                        { key: 'subtype', value: document.getElementById('suitType').value.toUpperCase() }
+                    );
+                    break;
+            }
+    
+            if(additional) fields.push({ key: 'additional', value: additional });
+            return fields.filter(f => f.value);
+        }
+    
+        function buildFullDescription() {
+            const type = document.getElementById('equipmentType').value;
+            const parts = [type];
+    
+            switch(type) {
+                case 'Fire Extinguisher':
+                    parts.push(
+                        document.getElementById('fireClass').value,
+                        `${document.getElementById('capacity').value}${document.getElementById('capacityUnit').value}`
+                    );
+                    break;
+    
+                case 'Fire Hose':
+                    if(document.getElementById('hoseType').value === 'suction') {
+                        const subtype = document.querySelector('input[name="suctionType"]:checked');
+                        if(subtype) parts.push(subtype.nextElementSibling.textContent);
+                    }
+                    else if(document.getElementById('hoseType').value === 'delivery') {
+                        parts.push(document.getElementById('deliveryType').value);
+                    }
+    
+                    parts.push(
+                        `${document.getElementById('hoseLength').value}${document.getElementById('lengthUnit').value} X ${document.getElementById('hoseDiameter').value}"`
+                    );
+    
+                    const pressure = document.getElementById('pressure').value;
+                    if(pressure) parts.push(`${pressure}${document.getElementById('pressureUnit').value}`);
+                    break;
+    
+                case 'Fire Nozzle':
+                    parts.push(
+                        document.getElementById('nozzleType').value,
+                        `${document.getElementById('outletDia').value}" X ${document.getElementById('hoseTailDia').value}"`
+                    );
+                    break;
+    
+                case 'Hydrant':
+                    parts.push(
+                        document.getElementById('hydrantType').value,
+                        document.querySelector('input[name="controlType"]:checked')?.nextElementSibling.textContent,
+                        document.querySelector('input[name="wayType"]:checked')?.nextElementSibling.textContent
+                    );
+                    break;
+    
+                case 'Fire Alarm':
+                    const alarmType = document.getElementById('alarmType').value;
+                    const subtype = alarmType === 'detector' ? 
+                        document.getElementById('detectorType').value : 
+                        document.getElementById('notifierType').value;
+                    parts.push(subtype);
+                    break;
+    
+                case 'Sprinkler Head':
+                    parts.push(document.getElementById('sprinklerType').value);
+                    break;
+    
+                case 'Fire Suit':
+                    parts.push(document.getElementById('suitType').value);
+                    break;
+            }
+    
+            const additional = document.getElementById('additionalSpecs').value;
+            if(additional) parts.push(additional);
+    
+            return parts.join(' ');
+        }
+    
+        function updateLiveCounter() {
+            try {
+                const output = document.getElementById('output');
+                const outputText = output.value;
+                const count = outputText.length;
+                
+                document.getElementById('charCounter').textContent = `${count}/40 characters`;
+                document.getElementById('charCounter').style.color = count > 40 ? 'red' : '#6c757d';
+            } catch {
+                document.getElementById('charCounter').textContent = '0/40 characters';
+            }
+        }
+    
+        function generateSpec() {
+            const output = document.getElementById('output');
+            const fullDesc = document.getElementById('fullDescription');
+            
+            output.value = '';
+            output.style.color = 'inherit';
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    
+            if(!validateForm()) {
+                output.style.color = 'red';
+                output.value = 'Please correct the highlighted fields';
+                fullDesc.value = '';
+                return;
+            }
+    
+            try {
+                const type = document.getElementById('equipmentType').value;
+                const fields = buildSpecFields();
+                const shortSpec = truncateSpec(fields, type);
+                const fullSpec = buildFullDescription();
+    
+                // Set editable fields
+                output.value = shortSpec;
+                fullDesc.value = fullSpec;
+    
+                if(shortSpec.length > 40) {
+                    output.style.color = 'red';
+                    output.value += ' (CHARACTER LIMIT EXCEEDED)';
+                }
+    
+                // Update counter with final value
+                updateLiveCounter();
+                
+            } catch(error) {
+                output.style.color = 'red';
+                output.value = error.message;
+                fullDesc.value = '';
+            }
+        }
+    
+        function resetForm() {
+            document.getElementById('fireForm').reset();
+            document.querySelectorAll('.dynamic-section').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.getElementById('charCounter').textContent = '0/40 characters';
+            document.getElementById('output').value = '';
+            document.getElementById('fullDescription').value = '';
+        }
+    </script>
+    
+</body>
+</html>

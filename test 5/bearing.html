@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bearing Specification</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .dynamic-section, #sub-type-group, .suffix-option { 
+            display: none; 
+        }
+        #output, #fullDescription { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-word;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 38px;
+        }
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: .25rem;
+            font-size: 80%;
+            color: #dc3545;
+        }
+        .form-control.is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        label {
+            font-weight: 500;
+            color: #495057;
+        }
+        .navbar-logo {
+            height: 50px;
+            width: auto;
+        }
+        .form-section-title {
+            font-weight: bold;
+            color: #007bff;
+            border-bottom: 1px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Bearing & Accessories Specification</h1>
+        <form id="bearingForm" novalidate>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" class="form-control" onchange="toggleSections()" required>
+                    <option value="">-- Required --</option>
+                    <option value="bearing">Bearing</option>
+                    <option value="unit">Bearing Unit (Housing)</option>
+                    <option value="accessory">Bearing Accessory</option>
+                </select>
+                <div class="invalid-feedback">Please select a category</div>
+            </div>
+
+            <div id="bearing-fields" class="dynamic-section">
+                <div class="form-section-title">Bearing Details</div>
+                <div class="form-row">
+                    <div class="col-md-4 form-group">
+                        <label>Bearing Type:</label>
+                        <select class="form-control" id="bearing-type" onchange="updateSubTypes()" required>
+                            <option value="">-- Required --</option>
+                            <option>Deep Groove Ball Bearing</option>
+                            <option>Angular Contact Ball Bearing</option>
+                            <option>Self-Aligning Ball Bearing</option>
+                            <option>Taper Roller Bearing</option>
+                            <option>Cylindrical Roller Bearing</option>
+                            <option>Spherical Roller Bearing</option>
+                            <option>Needle Roller Bearing</option>
+                            <option>Thrust Ball Bearing</option>
+                            <option>Thrust Cylindrical Roller Bearing</option>
+                            <option>Thrust Spherical Roller Bearing</option>
+                            <option>Wheel Hub Bearing</option>
+                            <option>Insert Bearing</option>
+                            <option>Crossed Roller Bearing</option>
+                            <option>Flange Bearing</option>
+                            <option>One Way Bearing</option>
+                            <option>Four-point Contact Ball Bearing</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a Bearing Type</div>
+                    </div>
+                    <div class="col-md-4 form-group" id="sub-type-group">
+                        <label>Bearing Sub-Type:</label>
+                        <select class="form-control" id="bearing-sub-type" onchange="updateSuffixOptions()">
+                        </select>
+                        <div class="invalid-feedback">Please select a Sub-Type</div>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label>Bearing Number / Code:</label>
+                        <input type="text" class="form-control" id="bearing-number" placeholder="Select type first..." required>
+                        <div class="invalid-feedback" id="code-validation-error">Bearing Number is required.</div>
+                    </div>
+                </div>
+                 <div class="form-row">
+                    <div class="col-md-4 form-group suffix-option" id="seals-group">
+                        <label>Seals/Shields:</label>
+                        <select class="form-control" id="bearing-seals">
+                            <option value="">OPEN (Default)</option>
+                            <option value="ZZ">ZZ / 2Z (Metal Shields)</option>
+                            <option value="2RS">2RS (Rubber Seals)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 form-group">
+                        <label>Other Suffixes:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend suffix-option" id="c3-group">
+                                <div class="input-group-text">
+                                    <input type="checkbox" id="suffix-c3" value="C3">
+                                    <label class="form-check-label ml-2" for="suffix-c3">C3</label>
+                                </div>
+                            </div>
+                            <div class="input-group-prepend suffix-option" id="k-group">
+                                <div class="input-group-text ml-2">
+                                    <input type="checkbox" id="suffix-k" value="K">
+                                    <label class="form-check-label ml-2" for="suffix-k">K</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" id="suffix-other" placeholder="e.g., E, J2, W33, ATN9">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                         <label>Make / Application (Optional):</label>
+                         <input type="text" class="form-control" id="bearing-make" placeholder="e.g., Toyota, SKF, Front Wheel Hub">
+                    </div>
+                </div>
+            </div>
+
+            <div id="unit-fields" class="dynamic-section">
+                <div class="form-section-title">Bearing Unit Details</div>
+                 <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Unit Type:</label>
+                        <select class="form-control" id="unit-type" onchange="updatePlaceholder()" required>
+                            <option value="">-- Required --</option>
+                            <option>Pillow Block</option>
+                            <option>Flange Unit</option>
+                            <option>Take-Up Unit</option>
+                        </select>
+                         <div class="invalid-feedback">Please select a Unit Type</div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Unit Part Number / Designation:</label>
+                        <input type="text" class="form-control" id="unit-number" required placeholder="Select a unit type first...">
+                        <div class="invalid-feedback" id="unit-code-validation-error">Unit Part Number is required.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="accessory-fields" class="dynamic-section">
+                <div class="form-section-title">Bearing Accessory Details</div>
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Accessory Type:</label>
+                        <select class="form-control" id="accessory-type" required>
+                             <option value="">-- Required --</option>
+                             <option>Adapter Sleeve</option>
+                             <option>Withdrawal Sleeve</option>
+                             <option>Lock Nut & Washer</option>
+                             <option>Inner Ring</option>
+                        </select>
+                        <div class="invalid-feedback">Please select an Accessory Type</div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Accessory Part Number:</label>
+                        <input type="text" class="form-control" id="accessory-number" required placeholder="e.g., H320, KM8, IR20X25X17">
+                        <div class="invalid-feedback" id="accessory-code-validation-error">Accessory Part Number is required.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+            </div>
+
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" onclick="generateName()">Generate Name</button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+            </div>
+        </form>
+
+        <div class="output-group mt-4">
+            <label for="output">Generated Specification:</label>
+            <textarea id="output" class="form-control" rows="2" placeholder="Short specification (max 40 chars) will appear here"></textarea>
+            
+            <div class="mt-4">
+                <label for="fullDescription">Full Description:</label>
+                <textarea class="form-control" id="fullDescription" rows="4" placeholder="Full description will appear here"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bearingSeriesData = {
+            'Deep Groove Ball Bearing': {
+                '6000 Series': { pattern: /^60\d{2}$/i, example: 'e.g., 6008', suffixes: ['seals', 'C3'], other: 'TN9, P6' },
+                '6200 Series': { pattern: /^62\d{2}$/i, example: 'e.g., 6205', suffixes: ['seals', 'C3'], other: 'TN9, P6' },
+                '6300 Series': { pattern: /^63\d{2}$/i, example: 'e.g., 6309', suffixes: ['seals', 'C3'], other: 'N, NR, M' },
+                '16000 Series': { pattern: /^16\d{3}$/i, example: 'e.g., 16001', suffixes: ['seals'] },
+                'Double Row': { pattern: /^4[23]\d{2}$/i, example: 'e.g., 4205', code: '(4xxx)', suffixes: ['C3'], other: 'ATN9, M' },
+                'Miniature (Metric)': { pattern: /^6\d{2}$/i, example: 'e.g., 608, 627', code: '(6xx)', suffixes: ['seals'] },
+                'Miniature (Inch)': { pattern: /^R\d{1,2}$/i, example: 'e.g., R8, R10', code: '(Rxx)', suffixes: ['seals'] }
+            },
+            'Angular Contact Ball Bearing': {
+                'Single Row': { pattern: /^7\d{3}$/i, example: 'e.g., 7204, 7308', code: '(7xxx)', suffixes: ['C3'], other: 'A, B, BEP, BECBM' },
+                'Double Row': { pattern: /^3[23]\d{2}$/i, example: 'e.g., 3206, 3309', code: '(3xxx)', suffixes: ['C3'], other: 'A, ATN9' },
+                'Excavator/Special': { pattern: /^(AC\d+|BA\d+.*)$/i, example: 'e.g., BA222-1WSA', code: '(AC/BA..)', suffixes: [] }
+            },
+            'Self-Aligning Ball Bearing': {
+                '1200 Series': { pattern: /^12\d{2}$/i, example: 'e.g., 1209', suffixes: ['K', 'C3'] },
+                '1300 Series': { pattern: /^13\d{2}$/i, example: 'e.g., 1305', suffixes: ['K', 'C3'] },
+                '2200 Series': { pattern: /^22\d{2}$/i, example: 'e.g., 2205', suffixes: ['K', 'C3', 'seals'], other: 'E, ETN9' },
+                '2300 Series': { pattern: /^23\d{2}$/i, example: 'e.g., 2310', suffixes: ['K', 'C3'], other: 'E, EM' }
+            },
+            'Cylindrical Roller Bearing': {
+                'Single Row': { pattern: /^(N|NU|NJ|NUP)\d{2,4}.*/i, example: 'e.g., NU210, NJ305', code: '(N/NU..)', suffixes: ['C3'], other: 'E, ECP, M, MA' },
+                'Double Row': { pattern: /^(NN|NNU)\d+.*/i, example: 'e.g., NNU4922', code: '(NN/NNU..)', suffixes: ['K', 'C3'], other: 'M, W33' }
+            },
+            'Spherical Roller Bearing': {
+                'Standard Series': { pattern: /^2\d{4}$/i, example: 'e.g., 22218, 21305', code: '(2xxxx)', suffixes: ['K', 'C3'], other: 'E, EK, CC, CA, W33' },
+            },
+            'Taper Roller Bearing': {
+                'Metric (3xxxx Series)': { pattern: /^3\d{4}$/i, example: 'e.g., 30207, 32210', suffixes: [], other: 'J2, Q' },
+                'Imperial (Inch Series)': { pattern: /^((L|LM|M|HM|H|HH|EH|T|JL|JLM|JM|JH|KJM|KHM|EE|K)\d{4,6}|(\d{5,6}))$/i, example: 'e.g., LM11749, M12649', suffixes: [] }
+            },
+             'Wheel Hub Bearing': {
+                'DAC Series': { pattern: /^DAC\d+/i, example: 'e.g., DAC38720037', suffixes: [] },
+                'VKBA Series': { pattern: /^VKBA\d+/i, example: 'e.g., VKBA3596', suffixes: [] },
+                'Other Series': { pattern: /^(BTH|BTF|FW|AU|BAH|BAHB|SET|DU)\d+.*/i, example: 'e.g., FW150, BTH1206', code: '(FW/BTH..)', suffixes: [] }
+            },
+            'Thrust Ball Bearing': {
+                'Standard Series': { pattern: /^5\d{4}$/i, example: 'e.g., 51104, 51220', code: '(5xxxx)', suffixes: [] }
+            },
+             'Thrust Cylindrical Roller Bearing': {
+                'Standard Series': { pattern: /^(811|812)\d{2,}$/i, example: 'e.g., 81106, 81212', code: '(81xxx)', suffixes: [] }
+            },
+            'Thrust Spherical Roller Bearing': {
+                'Standard Series': { pattern: /^29\d{3,}$/i, example: 'e.g., 29412, 29320', code: '(29xxx)', suffixes: [], other: 'E, M' }
+            },
+            'Needle Roller Bearing': {
+                'Drawn Cup': { pattern: /^(HK|BK|F).*/i, example: 'e.g., HK1512', code: '(HK..)', suffixes: ['seals'] },
+                'Machined Ring': { pattern: /^(NA|RNA|NK|NKI).*/i, example: 'e.g., NA4905', code: '(NA..)', suffixes: ['seals'] },
+                'Track Roller': { pattern: /^(CF|CRY|NUTR|NUKR|KR).*/i, example: 'e.g., CF10, NUTR30', code: '(CF/NUTR..)', suffixes: [] },
+                'Thrust Needle': { pattern: /^(AXK|NTA|AXW)\d+.*/i, example: 'e.g., AXK1024', code: '(AXK..)', suffixes: [] },
+                'Cage Assembly': { pattern: /^K\d+.*/i, example: 'e.g., K18x24x13', code: '(K..)', suffixes: [] }
+            },
+            'Crossed Roller Bearing': {
+                'Standard Series': { pattern: /^(RA|RB|RE|RU|SX|CRBH|XSU|CRB|CRBC|XR|JR|CRBF|CRBS).*/i, example: 'e.g., RA5008, CRB3010', code: '(RA/CRB..)', suffixes: [] },
+                'Rotary Table': { pattern: /^(YRTC|YRTS|YRT).*/i, example: 'e.g., YRT100', code: '(YRT..)', suffixes: [] }
+            },
+            'Insert Bearing': {
+                'Standard Series': { pattern: /^(UC|UB|SB|UEL|SA|NA|HC|UK)\d+.*/i, example: 'e.g., UC205, UK208', code: '(UC/UK..)', suffixes: ['seals'] }
+            },
+            'Flange Bearing': {
+                'Standard Series': { pattern: /^(F\d+|MF\d+)/i, example: 'e.g., F608, MF104', code: '(Fxxx)', suffixes: ['seals'] }
+            },
+            'One Way Bearing': {
+                'Standard Series': { pattern: /^(CSK|GFK|AS|ASNU|AE|AA)\d+$/i, example: 'e.g., CSK17, ASNU20', code: '(CSK..)', suffixes: [] }
+            },
+            'Four-point Contact Ball Bearing': {
+                'QJ Series': { pattern: /^QJ\d{3,4}/i, example: 'e.g., QJ205, QJ310', suffixes: [], other: 'M, MA' }
+            }
+        };
+
+        const unitCodePatterns = {
+            'Pillow Block': { pattern: /^(UCP|NAP|UELP|UKP|SY|SNL|SONL|SAF).+$/i, name: 'Pillow Block', example: 'e.g., UCP208, SY50WM' },
+            'Flange Unit': { pattern: /^(UCF|UCFU|UCFC|UCFL|UELFU|UKFU|UKFC|FY|FNL).+$/i, name: 'Flange Unit', example: 'e.g., UCF210, FYTB50TF' },
+            'Take-Up Unit': { pattern: /^(UCT|UKT).+$/i, name: 'Take-Up Unit', example: 'e.g., UCT207' }
+        };
+        
+        const accessoryCodePatterns = {
+            'Inner Ring': { pattern: /^(IR|LR)\d+.*/i, name: 'Inner Ring', example: 'e.g., IR20X25X17' }
+        };
+
+        const removalOrders = {
+            'bearing': ['make', 'suffixes', 'number'],
+            'unit': ['number'],
+            'accessory': ['number']
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input, select').forEach(element => {
+                element.addEventListener('input', () => element.classList.remove('is-invalid'));
+            });
+            document.getElementById('bearing-number').addEventListener('input', () => validateBearingCode(true));
+            document.getElementById('unit-number').addEventListener('input', () => validateUnitCode(true));
+            document.getElementById('accessory-number').addEventListener('input', () => validateAccessoryCode(true));
+            document.getElementById('output').addEventListener('input', updateLiveCounter);
+        });
+
+        function toggleSections() {
+            const category = getValue('category');
+            document.querySelectorAll('.dynamic-section').forEach(section => section.style.display = 'none');
+            if (category) {
+                const section = document.getElementById(`${category}-fields`);
+                if (section) section.style.display = 'block';
+            }
+            updateSubTypes();
+        }
+
+        function updateSubTypes() {
+            const bearingType = getValue('bearing-type');
+            const subTypeGroup = document.getElementById('sub-type-group');
+            const subTypeSelect = document.getElementById('bearing-sub-type');
+            
+            subTypeSelect.innerHTML = '<option value="">-- Required --</option>'; 
+            const subTypes = bearingSeriesData[bearingType];
+            
+            if (subTypes && Object.keys(subTypes).length > 0) {
+                Object.keys(subTypes).forEach(subTypeName => {
+                    const option = document.createElement('option');
+                    const subTypeData = subTypes[subTypeName];
+                    let displayText = subTypeName;
+                    if (subTypeData.code && !subTypeName.toLowerCase().includes('series')) {
+                        displayText += ` ${subTypeData.code}`;
+                    }
+                    option.value = subTypeName;
+                    option.textContent = displayText;
+                    subTypeSelect.appendChild(option);
+                });
+                subTypeGroup.style.display = 'block';
+                subTypeSelect.setAttribute('required', 'required');
+            } else {
+                subTypeGroup.style.display = 'none';
+                subTypeSelect.removeAttribute('required');
+            }
+            updateSuffixOptions();
+        }
+
+        function updateSuffixOptions() {
+            const bearingType = getValue('bearing-type');
+            const subType = getValue('bearing-sub-type');
+            
+            // Reset all suffix options
+            document.querySelectorAll('.suffix-option').forEach(el => el.style.display = 'none');
+            document.getElementById('suffix-other').placeholder = 'e.g., A, B, E, M';
+
+            const subTypeData = bearingSeriesData[bearingType]?.[subType];
+            if (subTypeData?.suffixes) {
+                if (subTypeData.suffixes.includes('seals')) document.getElementById('seals-group').style.display = 'block';
+                if (subTypeData.suffixes.includes('C3')) document.getElementById('c3-group').style.display = 'inline-flex';
+                if (subTypeData.suffixes.includes('K')) document.getElementById('k-group').style.display = 'inline-flex';
+            }
+            if (subTypeData?.other) {
+                document.getElementById('suffix-other').placeholder = `e.g., ${subTypeData.other}`;
+            }
+            updatePlaceholder();
+        }
+        
+        function updatePlaceholder() {
+            const category = getValue('category');
+            if (category === 'bearing') {
+                const bearingType = getValue('bearing-type');
+                const subType = getValue('bearing-sub-type');
+                const numberInput = document.getElementById('bearing-number');
+                const subTypeData = bearingSeriesData[bearingType]?.[subType];
+                numberInput.placeholder = subTypeData?.example || 'Select sub-type...';
+            } else if (category === 'unit') {
+                const unitType = getValue('unit-type');
+                const numberInput = document.getElementById('unit-number');
+                numberInput.placeholder = unitCodePatterns[unitType]?.example || 'e.g., UCP208';
+            }
+        }
+        
+        function getCoreCode(bearingNum) {
+            if (!bearingNum) return '';
+            return bearingNum.trim().toUpperCase().split(' ')[0].split('/')[0];
+        }
+
+        function validateBearingCode(isRealTime = false) {
+            const bearingType = getValue('bearing-type');
+            const subType = getValue('bearing-sub-type');
+            const bearingNum = getValue('bearing-number');
+            const errorDiv = document.getElementById('code-validation-error');
+            
+            if (!bearingType || !subType ||!bearingNum) {
+                if(isRealTime) errorDiv.textContent = 'Bearing Number is required.';
+                return { isValid: !isRealTime, message: 'Bearing Number is required.' };
+            }
+            
+            const coreCode = getCoreCode(bearingNum);
+            const selectedPatternData = bearingSeriesData[bearingType]?.[subType];
+
+            if (selectedPatternData && selectedPatternData.pattern.test(coreCode)) {
+                if (isRealTime) errorDiv.textContent = '';
+                return { isValid: true, message: '' };
+            }
+
+            for (const mainType in bearingSeriesData) {
+                for (const sub in bearingSeriesData[mainType]) {
+                    if (mainType !== bearingType || sub !== subType) {
+                        const otherPatternData = bearingSeriesData[mainType][sub];
+                        if (otherPatternData.pattern.test(coreCode)) {
+                            const message = `Code format looks like a ${mainType} - ${sub}. Please select the correct types.`;
+                            return { isValid: false, message: message };
+                        }
+                    }
+                }
+            }
+            
+            const generalErrorMessage = `Invalid code format for a ${subType || bearingType}. Example: ${selectedPatternData?.example || '6205'}.`;
+            return { isValid: false, message: generalErrorMessage };
+        }
+
+        function validateUnitCode(isRealTime = false) {
+            const unitType = getValue('unit-type');
+            const unitNum = getValue('unit-number');
+            const errorDiv = document.getElementById('unit-code-validation-error');
+
+            if (!unitType || !unitNum) {
+                if (isRealTime) errorDiv.textContent = 'Unit Part Number is required.';
+                return { isValid: !isRealTime, message: 'Unit Part Number is required.' };
+            }
+            
+            const selectedPatternData = unitCodePatterns[unitType];
+            if (selectedPatternData && selectedPatternData.pattern.test(unitNum)) {
+                if (isRealTime) errorDiv.textContent = '';
+                return { isValid: true, message: '' };
+            }
+
+            for (const key in unitCodePatterns) {
+                if (key !== unitType && unitCodePatterns[key].pattern.test(unitNum)) {
+                    const message = `Code format looks like a ${unitCodePatterns[key].name}. Please select the correct Unit Type.`;
+                    return { isValid: false, message: message };
+                }
+            }
+
+            const generalErrorMessage = `Invalid code format for a ${selectedPatternData?.name}. Example: ${selectedPatternData?.example || 'UCP205'}.`;
+            return { isValid: false, message: generalErrorMessage };
+        }
+        
+        function validateAccessoryCode(isRealTime = false) {
+            const accType = getValue('accessory-type');
+            const accNum = getValue('accessory-number');
+            const errorDiv = document.getElementById('accessory-code-validation-error');
+
+            if (!accType || !accNum) {
+                 if (isRealTime) errorDiv.textContent = 'Accessory Part Number is required.';
+                return { isValid: !isRealTime, message: 'Accessory Part Number is required.' };
+            }
+
+            const selectedPatternData = accessoryCodePatterns[accType];
+            if (selectedPatternData) {
+                if (selectedPatternData.pattern.test(accNum)) {
+                    if (isRealTime) errorDiv.textContent = '';
+                    return { isValid: true, message: '' };
+                } else {
+                    const message = `Invalid code format for an ${selectedPatternData.name}. Example: ${selectedPatternData.example}.`;
+                    return { isValid: false, message: message };
+                }
+            }
+            if (isRealTime) errorDiv.textContent = '';
+            return { isValid: true, message: '' };
+        }
+
+        function validateForm() {
+            let isValid = true;
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.getElementById('code-validation-error').textContent = 'Bearing Number is required.';
+            document.getElementById('unit-code-validation-error').textContent = 'Unit Part Number is required.';
+            document.getElementById('accessory-code-validation-error').textContent = 'Accessory Part Number is required.';
+
+            const category = document.getElementById('category').value;
+            if (!category) {
+                document.getElementById('category').classList.add('is-invalid');
+                return false;
+            }
+
+            const activeSection = document.querySelector('.dynamic-section[style*="block"]');
+            if (activeSection) {
+                activeSection.querySelectorAll('[required]').forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                });
+                
+                if (category === 'bearing') {
+                    const codeValidation = validateBearingCode();
+                    if (!codeValidation.isValid) {
+                        document.getElementById('bearing-type').classList.add('is-invalid');
+                        document.getElementById('bearing-sub-type').classList.add('is-invalid');
+                        document.getElementById('bearing-number').classList.add('is-invalid');
+                        document.getElementById('code-validation-error').textContent = codeValidation.message;
+                        isValid = false;
+                    }
+                } else if (category === 'unit') {
+                     const codeValidation = validateUnitCode();
+                     if (!codeValidation.isValid) {
+                        document.getElementById('unit-type').classList.add('is-invalid');
+                        document.getElementById('unit-number').classList.add('is-invalid');
+                        document.getElementById('unit-code-validation-error').textContent = codeValidation.message;
+                        isValid = false;
+                    }
+                } else if (category === 'accessory') {
+                    const codeValidation = validateAccessoryCode();
+                     if (!codeValidation.isValid) {
+                        document.getElementById('accessory-type').classList.add('is-invalid');
+                        document.getElementById('accessory-number').classList.add('is-invalid');
+                        document.getElementById('accessory-code-validation-error').textContent = codeValidation.message;
+                        isValid = false;
+                    }
+                }
+            } else {
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        function getValue(id) {
+            return document.getElementById(id)?.value.trim() || '';
+        }
+        
+        function getCheckboxValue(id) {
+            return document.getElementById(id)?.checked ? document.getElementById(id).value : '';
+        }
+
+        function buildSpec() {
+            const category = getValue('category');
+            let fields = [], fullDescParts = [];
+
+            switch (category) {
+                case 'bearing':
+                    const bearingType = getValue('bearing-type').toUpperCase();
+                    const bearingSubType = getValue('bearing-sub-type').replace(/ Series/i, '');
+                    const bearingNum = getValue('bearing-number').toUpperCase();
+                    const make = getValue('bearing-make').toUpperCase();
+                    const suffixes = [
+                        getValue('bearing-seals'),
+                        getCheckboxValue('suffix-c3'),
+                        getCheckboxValue('suffix-k'),
+                        getValue('suffix-other').toUpperCase()
+                    ].filter(Boolean).join(' ');
+
+                    if (make) fields.push({ key: 'make', value: make });
+                    fields.push({ key: 'type', value: bearingType });
+                    fields.push({ key: 'number', value: bearingNum });
+                    if (suffixes) fields.push({ key: 'suffixes', value: suffixes });
+                    fullDescParts = [make, bearingSubType, bearingType, bearingNum, suffixes];
+                    break;
+                case 'unit':
+                    const unitType = getValue('unit-type').toUpperCase();
+                    const unitNum = getValue('unit-number').toUpperCase();
+                    fields.push({ key: 'type', value: unitType });
+                    fields.push({ key: 'number', value: unitNum });
+                    fullDescParts = [unitType, unitNum];
+                    break;
+                case 'accessory':
+                    const accType = getValue('accessory-type').toUpperCase();
+                    const accNum = getValue('accessory-number').toUpperCase();
+                    fields.push({ key: 'type', value: accType });
+                    fields.push({ key: 'number', value: accNum });
+                    fullDescParts = [accType, accNum];
+                    break;
+            }
+            return {
+                shortSpec: truncateSpec(fields.filter(f => f.value)),
+                fullSpec: fullDescParts.filter(Boolean).join(' ').toUpperCase()
+            };
+        }
+        
+        function truncateSpec(fields) {
+            let currentFields = [...fields];
+            const order = ['make', 'suffixes', 'number'];
+            let specString = currentFields.map(f => f.value).join(' ');
+            
+            while (specString.length > 40 && currentFields.length > 0) {
+                const fieldKeyToRemove = order.find(key => currentFields.some(f => f.key === key));
+                if (!fieldKeyToRemove) {
+                    if (currentFields.length > 1) { currentFields.pop(); } 
+                    else { break; }
+                } else {
+                    const index = currentFields.findIndex(f => f.key === fieldKeyToRemove);
+                    if (index > -1) { currentFields.splice(index, 1); } 
+                    else { break; }
+                }
+                specString = currentFields.map(f => f.value).join(' ');
+            }
+            return specString;
+        }
+
+        function updateLiveCounter() {
+            const output = document.getElementById('output');
+            const count = output.value.length;
+            const charCounter = document.getElementById('charCounter');
+            charCounter.textContent = `${count}/40 characters`;
+            charCounter.style.color = count > 40 ? 'red' : '#6c757d';
+            output.classList.toggle('char-limit', count > 40);
+        }
+
+        function generateName() {
+            const output = document.getElementById('output');
+            const fullDesc = document.getElementById('fullDescription');
+            
+            if (!validateForm()) {
+                output.value = 'Please correct the highlighted fields.';
+                fullDesc.value = '';
+                return;
+            }
+
+            const { shortSpec, fullSpec } = buildSpec();
+            output.value = shortSpec;
+            fullDesc.value = fullSpec;
+            updateLiveCounter();
+        }
+
+        function resetForm() {
+            document.getElementById('bearingForm').reset();
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.dynamic-section').forEach(el => el.style.display = 'none');
+            document.getElementById('output').value = '';
+            document.getElementById('fullDescription').value = '';
+            document.getElementById('code-validation-error').textContent = 'Bearing Number is required.';
+            document.getElementById('unit-code-validation-error').textContent = 'Unit Part Number is required.';
+            document.getElementById('accessory-code-validation-error').textContent = 'Accessory Part Number is required.';
+            updateSubTypes();
+            updateLiveCounter();
+        }
+    </script>
+</body>
+</html>

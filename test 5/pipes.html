@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipes and Pipe Fittings</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hidden { display: none; }
+        #output { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-word;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 38px;
+        }
+        .char-limit { color: red; }
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+        #fullDescription {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            min-height: 38px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        .input-group-text {
+            min-width: 65px;
+            white-space: nowrap;
+        }
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-color: #fff5f5;
+        }
+        .invalid-feedback {
+            display: none;
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+        }
+        .is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+        .validation-summary {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+            border: 1px solid #f5c6cb;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .navbar-logo {
+            height: 50px;
+            width: auto;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .output-group {
+            margin-top: 20px;
+        }
+        #output-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h1 class="mb-4">Pipes and Pipe Fittings</h1>
+    
+    <div class="validation-summary" id="validationSummary">
+      <span id="summaryMessage">Please correct the highlighted fields</span>
+    </div>
+    
+    <form id="pipesForm">
+      <!-- Category Selector -->
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select id="category" class="form-control" required>
+          <option value="">-- Required --</option>
+          <option value="pipe">Pipe</option>
+          <option value="pipe-fitting">Pipe Fitting</option>
+          <option value="flex-conduit">Flexible Conduit</option>
+        </select>
+        <div class="invalid-feedback">Please select a category</div>
+      </div>
+
+      <!-- Pipe Section -->
+      <div id="pipe-fields" class="hidden">
+        <div class="form-group">
+          <label>Pipe Type:</label>
+          <select id="pipe-type" class="form-control" required>
+            <option value="">-- Required --</option>
+            <option value="ms-black">MS Black Pipe</option>
+            <option value="gi">GI Pipe</option>
+            <option value="seamless">Seamless Pipe</option>
+            <option value="upvc-pressure">UPVC Pressure Pipe</option>
+            <option value="hdpe">HDPE Pipe</option>
+            <option value="ppr">PPR Pipe</option>
+            <option value="pvc-waste">PVC Waste Pipe</option>
+          </select>
+          <div class="invalid-feedback">Pipe type required</div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pipe-color">Color:</label>
+              <input type="text" id="pipe-color" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pipe-brand">Brand:</label>
+              <input type="text" id="pipe-brand" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div id="pipe-type-fields">
+          <!-- MS/GI Pipes -->
+          <div class="row hidden" id="class-pipe-fields">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Diameter:</label>
+                <div class="input-group">
+                  <input type="number" id="imperial-size" class="form-control" step="0.1" required>
+                  <span class="input-group-text">"</span>
+                </div>
+                <div class="invalid-feedback">Required</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Class:</label>
+                <select id="pipe-class" class="form-control" required>
+                  <option value="">-- Required --</option>
+                  <option>CLASS A</option>
+                  <option>CLASS B</option>
+                  <option>CLASS C</option>
+                </select>
+                <div class="invalid-feedback">Required</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metric Pipes -->
+          <div class="row hidden" id="metric-pipe-fields">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Diameter:</label>
+                <div class="input-group">
+                  <input type="number" id="metric-size" class="form-control" required>
+                  <span class="input-group-text">MM</span>
+                </div>
+                <div class="invalid-feedback">Required</div>
+              </div>
+            </div>
+            <div class="col-md-4 hidden" id="sch-group">
+              <div class="form-group">
+                <label>Schedule:</label>
+                <div class="input-group">
+                  <input type="number" id="pipe-schedule" class="form-control" required>
+                  <div class="invalid-feedback">Required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 hidden" id="pn-group">
+              <div class="form-group">
+                <label>PN Rating:</label>
+                <input type="number" id="pn-rating" class="form-control" required>
+                <div class="invalid-feedback">Required</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Common Fields -->
+          <div class="row hidden" id="common-fields">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Length:</label>
+                <div class="input-group">
+                  <input type="number" id="pipe-length" class="form-control" required>
+                  <span class="input-group-text">M</span>
+                </div>
+                <div class="invalid-feedback">Required</div>
+              </div>
+            </div>
+            <div class="col-md-6 hidden" id="hdpe-package-group">
+              <div class="form-group">
+                <label>Package:</label>
+                <select id="hdpe-package" class="form-control">
+                  <option>STRAIGHT</option>
+                  <option>COIL</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipe Fitting Section -->
+      <div id="pipe-fitting-fields" class="hidden">
+        <div class="form-group">
+          <label>Material:</label>
+          <select id="fitting-material" class="form-control" required>
+            <option value="">-- Required --</option>
+            <option>Stainless Steel</option>
+            <option>Mild Steel</option>
+            <option>Galvanised Iron</option>
+            <option>Aluminium</option>
+            <option>Copper</option>
+            <option>PVC</option>
+            <option>PPR</option>
+            <option>Plastic</option>
+            <option>HDPE</option>
+            <option value="other">Other</option>
+          </select>
+          <div class="invalid-feedback">Required</div>
+          <input type="text" id="custom-fitting-material" class="form-control hidden mt-2" placeholder="Enter custom material">
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="fitting-color">Color:</label>
+              <input type="text" id="fitting-color" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="fitting-brand">Brand:</label>
+              <input type="text" id="fitting-brand" class="form-control">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Item:</label>
+              <select id="fitting-item" class="form-control" required>
+                <option value="">-- Required --</option>
+                <option>Flange</option>
+                <option>Elbow</option>
+                <option>Reducer</option>
+                <option>Tee</option>
+                <option>Valve</option>
+              </select>
+              <div class="invalid-feedback">Required</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Type:</label>
+              <select id="fitting-type" class="form-control hidden"></select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group hidden" id="valve-desc-group">
+              <label>Description:</label>
+              <select id="valve-desc" class="form-control">
+                <option value="">-- Choose --</option>
+                <option>Flanged</option>
+                <option>Weld On</option>
+                <option>Socket</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flange Fields -->
+        <div id="flange-fields" class="hidden">
+          <div class="form-group">
+            <label>BCD:</label>
+            <input type="text" id="bcd" class="form-control" maxlength="5" required>
+            <div class="invalid-feedback">Required</div>
+          </div>
+        </div>
+
+        <!-- Reducer Fields -->
+        <div id="reducer-fields" class="hidden">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Larger Diameter:</label>
+                <input type="text" id="reducer-large" class="form-control" maxlength="5" required>
+                <div class="invalid-feedback">Required</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Smaller Diameter:</label>
+                <input type="text" id="reducer-small" class="form-control" maxlength="5" required>
+                <div class="invalid-feedback">Required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tee Fields -->
+        <div id="tee-fields" class="hidden">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group" id="equal-diameter">
+                <label>Diameter:</label>
+                <input type="text" id="tee-equal" class="form-control" maxlength="5" required>
+                <div class="invalid-feedback">Required</div>
+              </div>
+              <div class="row hidden" id="reducing-diameters">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Larger Diameter:</label>
+                    <input type="text" id="tee-large" class="form-control" maxlength="5" required>
+                    <div class="invalid-feedback">Required</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Smaller Diameter:</label>
+                    <input type="text" id="tee-small" class="form-control" maxlength="5" required>
+                    <div class="invalid-feedback">Required</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Valve BCD -->
+        <div id="valve-bcd" class="hidden">
+          <div class="form-group">
+            <label>BCD:</label>
+            <input type="text" id="valve-bcd-input" class="form-control" maxlength="5" required>
+            <div class="invalid-feedback">Required</div>
+          </div>
+        </div>
+
+        <!-- Size Field -->
+        <div class="row" id="standard-size">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Size:</label>
+              <div class="input-group">
+                <input type="text" id="fitting-size" class="form-control" maxlength="5" required>
+                <span class="input-group-text">MM</span>
+              </div>
+              <div class="invalid-feedback">Required</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flexible Conduit Section -->
+      <div id="flex-conduit-fields" class="hidden">
+        <div class="form-group">
+          <label>Material:</label>
+          <select id="flex-material" class="form-control" required>
+            <option value="">-- Required --</option>
+            <option>PVC</option>
+            <option>UPVC</option>
+            <option>CPVC</option>
+            <option>PU</option>
+            <option value="other">Other</option>
+          </select>
+          <div class="invalid-feedback">Required</div>
+          <input type="text" id="custom-flex-material" class="form-control hidden mt-2" placeholder="Enter custom material">
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="flex-color">Color:</label>
+              <input type="text" id="flex-color" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="flex-brand">Brand:</label>
+              <input type="text" id="flex-brand" class="form-control">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Diameter:</label>
+          <div class="input-group">
+            <input type="text" id="flex-diameter" class="form-control" required>
+            <span class="input-group-text">MM</span>
+          </div>
+          <div class="invalid-feedback">Required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+      </div>
+
+      <div class="mt-4">
+        <button type="button" class="btn btn-primary mr-2" onclick="generateName()">Generate Name</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+      </div>
+    </form>
+
+    <div class="output-group">
+      <div id="output-container">
+        <textarea id="output" class="form-control mt-4" rows="2"></textarea>
+        <div class="char-count" id="outputCharCount">0/40 characters</div>
+      </div>
+      <div class="mt-4">
+        <label>Full Description:</label>
+        <textarea class="form-control" id="fullDescription" rows="4"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const typeOptions = {
+      Flange: ['Weld Neck', 'Slip On', 'Socket', 'Lap Joint', 'Threaded'],
+      Elbow: ['90 DEG', '45 DEG'],
+      Reducer: ['Concentric', 'Eccentric'],
+      Tee: ['Equal', 'Reducing'],
+      Valve: ['Gate', 'Ball', 'Check', 'Butterfly']
+    };
+
+    const materialMap = {
+      'Stainless Steel': 'SS', 'Mild Steel': 'MS', 'Galvanised Iron': 'GI',
+      'Aluminium': 'AL', 'Copper': 'CU', 'PVC': 'PVC', 'UPVC': 'UPVC',
+      'CPVC': 'CPVC', 'PU': 'PU', 'PPR': 'PPR', 'Plastic': 'PL', 'HDPE': 'HDPE'
+    };
+
+    // Define removal order for each category
+    const removalOrders = {
+      'pipe': ['pipe-brand', 'pipe-color', 'pipe-length'],
+      'pipe-fitting': ['fitting-brand', 'fitting-color', 'bcd'],
+      'flex-conduit': ['flex-brand', 'flex-color']
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Category change handler
+      document.getElementById('category').addEventListener('change', function() {
+        const category = this.value;
+        document.getElementById('pipe-fields').classList.toggle('hidden', category !== 'pipe');
+        document.getElementById('pipe-fitting-fields').classList.toggle('hidden', category !== 'pipe-fitting');
+        document.getElementById('flex-conduit-fields').classList.toggle('hidden', category !== 'flex-conduit');
+        updateCharCounter();
+      });
+
+      // Pipe type handler
+      document.getElementById('pipe-type').addEventListener('change', handlePipeTypeChange);
+
+      // Pipe fitting item change handler
+      document.getElementById('fitting-item').addEventListener('change', function() {
+        const item = this.value;
+        const typeSelect = document.getElementById('fitting-type');
+        
+        typeSelect.innerHTML = typeOptions[item] 
+          ? typeOptions[item].map(opt => `<option>${opt}</option>`).join('')
+          : '';
+        typeSelect.classList.toggle('hidden', !typeOptions[item]);
+        
+        // Toggle sections
+        document.getElementById('flange-fields').classList.toggle('hidden', item !== 'Flange');
+        document.getElementById('reducer-fields').classList.toggle('hidden', item !== 'Reducer');
+        document.getElementById('tee-fields').classList.toggle('hidden', item !== 'Tee');
+        document.getElementById('valve-bcd').classList.toggle('hidden', true);
+        document.getElementById('valve-desc-group').classList.toggle('hidden', item !== 'Valve');
+        document.getElementById('standard-size').classList.toggle('hidden', item === 'Tee' || item === 'Reducer');
+        updateCharCounter();
+      });
+
+      // Tee type handler
+      document.getElementById('fitting-type').addEventListener('change', function() {
+        if (document.getElementById('fitting-item').value === 'Tee') {
+          const isReducing = this.value === 'Reducing';
+          document.getElementById('equal-diameter').classList.toggle('hidden', isReducing);
+          document.getElementById('reducing-diameters').classList.toggle('hidden', !isReducing);
+        }
+        updateCharCounter();
+      });
+
+      // Valve description handler
+      document.getElementById('valve-desc').addEventListener('change', function() {
+        const isFlanged = this.value === 'Flanged';
+        document.getElementById('valve-bcd').classList.toggle('hidden', !isFlanged);
+        updateCharCounter();
+      });
+
+      // Material handlers
+      document.getElementById('fitting-material').addEventListener('change', function() {
+        document.getElementById('custom-fitting-material').classList.toggle('hidden', this.value !== 'other');
+        if(this.value !== 'other') document.getElementById('custom-fitting-material').value = '';
+      });
+
+      document.getElementById('flex-material').addEventListener('change', function() {
+        document.getElementById('custom-flex-material').classList.toggle('hidden', this.value !== 'other');
+        if(this.value !== 'other') document.getElementById('custom-flex-material').value = '';
+      });
+
+      // Input listeners
+      const trackedInputs = [
+        'pipe-color', 'pipe-brand', 'fitting-color', 'fitting-brand', 'flex-color', 'flex-brand',
+        'pipe-type', 'imperial-size', 'metric-size',
+        'pipe-schedule', 'pipe-class', 'fitting-material', 'fitting-item', 'fitting-type',
+        'bcd', 'reducer-large', 'reducer-small', 'tee-equal', 'tee-large', 'tee-small',
+        'valve-desc', 'valve-bcd-input', 'fitting-size', 'flex-material', 'flex-diameter',
+        'pn-rating', 'pipe-length', 'hdpe-package'
+      ];
+      
+      trackedInputs.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+            document.getElementById('validationSummary').style.display = 'none';
+            updateCharCounter();
+          });
+        }
+      });
+      
+      // Add event listeners for output textareas
+      document.getElementById('output').addEventListener('input', updateCharCounter);
+      document.getElementById('fullDescription').addEventListener('input', function() {
+        // No character limit for full description
+      });
+    });
+
+    function handlePipeTypeChange() {
+      const type = this.value;
+      
+      // Toggle field groups
+      const showClassPipe = ['ms-black', 'gi'].includes(type);
+      document.getElementById('class-pipe-fields').classList.toggle('hidden', !showClassPipe);
+      
+      const showMetricPipe = ['seamless', 'upvc-pressure', 'hdpe', 'ppr', 'pvc-waste'].includes(type);
+      document.getElementById('metric-pipe-fields').classList.toggle('hidden', !showMetricPipe);
+      
+      document.getElementById('sch-group').classList.toggle('hidden', type !== 'seamless');
+      document.getElementById('pn-group').classList.toggle('hidden', !['upvc-pressure', 'hdpe', 'ppr'].includes(type));
+      document.getElementById('hdpe-package-group').classList.toggle('hidden', type !== 'hdpe');
+      document.getElementById('common-fields').classList.toggle('hidden', !showMetricPipe);
+
+      updateCharCounter();
+    }
+
+    function validateForm() {
+      const category = document.getElementById('category').value;
+      let isValid = true;
+      
+      // Clear previous errors
+      document.querySelectorAll('.is-invalid').forEach(el => {
+        el.classList.remove('is-invalid');
+      });
+      
+      // Validate category
+      if (!category) {
+        document.getElementById('category').classList.add('is-invalid');
+        isValid = false;
+      }
+      
+      if (category === 'pipe') {
+        // Validate pipe fields
+        const pipeType = document.getElementById('pipe-type').value;
+        if (!pipeType) {
+          document.getElementById('pipe-type').classList.add('is-invalid');
+          isValid = false;
+        }
+        
+        if (['ms-black', 'gi'].includes(pipeType)) {
+          if (!document.getElementById('imperial-size').value) {
+            document.getElementById('imperial-size').classList.add('is-invalid');
+            isValid = false;
+          }
+          if (!document.getElementById('pipe-class').value) {
+            document.getElementById('pipe-class').classList.add('is-invalid');
+            isValid = false;
+          }
+        }
+        else if (['seamless', 'upvc-pressure', 'hdpe', 'ppr', 'pvc-waste'].includes(pipeType)) {
+          if (!document.getElementById('metric-size').value) {
+            document.getElementById('metric-size').classList.add('is-invalid');
+            isValid = false;
+          }
+          if (pipeType === 'seamless' && !document.getElementById('pipe-schedule').value) {
+            document.getElementById('pipe-schedule').classList.add('is-invalid');
+            isValid = false;
+          }
+          if (['upvc-pressure', 'hdpe', 'ppr'].includes(pipeType) && !document.getElementById('pn-rating').value) {
+            document.getElementById('pn-rating').classList.add('is-invalid');
+            isValid = false;
+          }
+          if (!document.getElementById('pipe-length').value) {
+            document.getElementById('pipe-length').classList.add('is-invalid');
+            isValid = false;
+          }
+        }
+      }
+      else if (category === 'pipe-fitting') {
+        // Validate pipe fitting fields
+        if (!document.getElementById('fitting-material').value) {
+          document.getElementById('fitting-material').classList.add('is-invalid');
+          isValid = false;
+        }
+        if (!document.getElementById('fitting-item').value) {
+          document.getElementById('fitting-item').classList.add('is-invalid');
+          isValid = false;
+        }
+        
+        const item = document.getElementById('fitting-item').value;
+        if (item && typeOptions[item] && !document.getElementById('fitting-type').value) {
+          document.getElementById('fitting-type').classList.add('is-invalid');
+          isValid = false;
+        }
+        
+        if (item === 'Flange') {
+          if (!document.getElementById('fitting-size').value) {
+            document.getElementById('fitting-size').classList.add('is-invalid');
+            isValid = false;
+          }
+          if (!document.getElementById('bcd').value) {
+            document.getElementById('bcd').classList.add('is-invalid');
+            isValid = false;
+          }
+        }
+        else if (item === 'Reducer') {
+          if (!document.getElementById('reducer-large').value) {
+            document.getElementById('reducer-large').classList.add('is-invalid');
+            isValid = false;
+          }
+          if (!document.getElementById('reducer-small').value) {
+            document.getElementById('reducer-small').classList.add('is-invalid');
+            isValid = false;
+          }
+        }
+        else if (item === 'Tee') {
+          const teeType = document.getElementById('fitting-type').value;
+          if (teeType === 'Reducing') {
+            if (!document.getElementById('tee-large').value) {
+              document.getElementById('tee-large').classList.add('is-invalid');
+              isValid = false;
+            }
+            if (!document.getElementById('tee-small').value) {
+              document.getElementById('tee-small').classList.add('is-invalid');
+              isValid = false;
+            }
+          }
+          else {
+            if (!document.getElementById('tee-equal').value) {
+              document.getElementById('tee-equal').classList.add('is-invalid');
+              isValid = false;
+            }
+          }
+        }
+        else if (item === 'Valve') {
+          if (!document.getElementById('fitting-size').value) {
+            document.getElementById('fitting-size').classList.add('is-invalid');
+            isValid = false;
+          }
+          if (document.getElementById('valve-desc').value === 'Flanged' && 
+              !document.getElementById('valve-bcd-input').value) {
+            document.getElementById('valve-bcd-input').classList.add('is-invalid');
+            isValid = false;
+          }
+        }
+        else if (item === 'Elbow') {
+          if (!document.getElementById('fitting-size').value) {
+            document.getElementById('fitting-size').classList.add('is-invalid');
+            isValid = false;
+          }
+        }
+      }
+      else if (category === 'flex-conduit') {
+        // Validate flexible conduit fields
+        if (!document.getElementById('flex-material').value) {
+          document.getElementById('flex-material').classList.add('is-invalid');
+          isValid = false;
+        }
+        if (!document.getElementById('flex-diameter').value) {
+          document.getElementById('flex-diameter').classList.add('is-invalid');
+          isValid = false;
+        }
+      }
+      
+      if (!isValid) {
+        document.getElementById('validationSummary').style.display = 'block';
+      }
+      
+      return isValid;
+    }
+
+    function buildPipeOutput() {
+      const category = document.getElementById('category').value;
+      let specParts = [];
+      
+      const getField = id => document.getElementById(id)?.value.trim().toUpperCase() || '';
+      
+      // Add basic info handler
+      const addBasicInfo = (colorId, brandId) => {
+        const color = getField(colorId);
+        const brand = getField(brandId);
+        if (color) specParts.push(color);
+        if (brand) specParts.push(brand);
+      };
+
+      // Material resolver
+      const getMaterial = (selectId, customId) => {
+        const material = document.getElementById(selectId).value;
+        const custom = getField(customId);
+        return material === 'other' ? custom : materialMap[material] || material;
+      };
+
+      if (category === 'pipe') {
+        // Pipe material mapping
+        const pipeMaterialMap = {
+          'ms-black': 'MS', 'gi': 'GI', 'seamless': 'MS',
+          'upvc-pressure': 'UPVC', 'hdpe': 'HDPE', 
+          'ppr': 'PPR', 'pvc-waste': 'PVC'
+        };
+
+        addBasicInfo('pipe-color', 'pipe-brand');
+        const pipeType = document.getElementById('pipe-type').value;
+        const material = pipeMaterialMap[pipeType] || '';
+
+        switch(pipeType) {
+          case 'ms-black':
+          case 'gi':
+            const size = getField('imperial-size');
+            const pipeClass = getField('pipe-class');
+            specParts.push(
+              `${material}${pipeType === 'ms-black' ? ' BLACK' : ''} PIPE`,
+              `${size}"`,
+              pipeClass
+            );
+            break;
+
+          case 'seamless':
+            const schedule = getField('pipe-schedule').replace(/SCH?/i, '');
+            specParts.push(
+              `${material} SEAMLESS PIPE`,
+              `DN${getField('metric-size')}`,
+              `SCH${schedule}`,
+              `${getField('pipe-length')}M`
+            );
+            break;
+
+          case 'upvc-pressure':
+          case 'hdpe':
+          case 'ppr':
+            const pnRating = getField('pn-rating');
+            specParts.push(
+              `${pipeType.toUpperCase()} PIPE`,
+              `DN${getField('metric-size')}`,
+              `PN${pnRating}`,
+              `${getField('pipe-length')}M`,
+              ...(pipeType === 'hdpe' ? [getField('hdpe-package')] : [])
+            );
+            break;
+
+          case 'pvc-waste':
+            specParts.push(
+              'PVC WASTE PIPE',
+              `DN${getField('metric-size')}`,
+              `${getField('pipe-length')}M`
+            );
+            break;
+        }
+      }
+      else if (category === 'pipe-fitting') {
+        addBasicInfo('fitting-color', 'fitting-brand');
+        
+        const material = getMaterial('fitting-material', 'custom-fitting-material');
+        const item = document.getElementById('fitting-item').value;
+
+        specParts.push(material, item.toUpperCase());
+
+        const type = document.getElementById('fitting-type').value.toUpperCase();
+        if (type) specParts.push(type);
+
+        switch(item) {
+          case 'Flange':
+            specParts.push(`${getField('fitting-size')}MM`, `BCD ${getField('bcd')}MM`);
+            break;
+          
+          case 'Reducer':
+            const large = getField('reducer-large');
+            const small = getField('reducer-small');
+            specParts.push(`${large}MM X ${small}MM`);
+            break;
+          
+          case 'Tee':
+            const equal = getField('tee-equal');
+            const tLarge = getField('tee-large');
+            const tSmall = getField('tee-small');
+            if (type === 'REDUCING') {
+              specParts.push(`${tLarge}MM X ${tSmall}MM`);
+            } else {
+              specParts.push(`${equal}MM`);
+            }
+            break;
+          
+          case 'Valve':
+            const valveSize = getField('fitting-size');
+            const bcd = getField('valve-bcd-input');
+            specParts.push(valveSize + 'MM');
+            if (getField('valve-desc') === 'FLANGED' && bcd) {
+              specParts.push(`BCD ${bcd}MM`);
+            }
+            break;
+          
+          default:  // Elbow
+            const size = getField('fitting-size');
+            specParts.push(size + 'MM');
+        }
+      }
+      else if (category === 'flex-conduit') {
+        addBasicInfo('flex-color', 'flex-brand');
+        const material = getMaterial('flex-material', 'custom-flex-material');
+        const diameter = getField('flex-diameter');
+        
+        specParts.push(
+          material,
+          'FLEX CONDUIT',
+          `${diameter}MM`
+        );
+      }
+
+      return {
+        spec: specParts.join(' '),
+        desc: specParts.join(' ')
+      };
+    }
+
+    function truncateSpec(fields, category) {
+      let currentFields = [...fields];
+      let specString = currentFields.join(' ');
+      const order = removalOrders[category] || [];
+      
+      while (specString.length > 40 && currentFields.length > 0) {
+        const fieldToRemove = order.find(field => currentFields.includes(field));
+        if (!fieldToRemove) break;
+        
+        const index = currentFields.indexOf(fieldToRemove);
+        if (index !== -1) {
+          currentFields.splice(index, 1);
+          specString = currentFields.join(' ');
+        }
+      }
+      
+      return specString;
+    }
+
+    function updateCharCounter() {
+      const output = document.getElementById('output');
+      const outputText = output.value;
+      const count = outputText.length;
+      
+      const charCounter = document.getElementById('outputCharCount');
+      charCounter.textContent = `${count}/40 characters`;
+      charCounter.style.color = count > 40 ? 'red' : '#6c757d';
+    }
+
+    function generateName() {
+      const output = document.getElementById('output');
+      const fullDesc = document.getElementById('fullDescription');
+      
+      // Clear previous states
+      output.value = '';
+      output.style.color = 'inherit';
+      document.getElementById('validationSummary').style.display = 'none';
+      
+      // Validate form
+      if (!validateForm()) {
+        output.value = 'Please correct the highlighted fields';
+        output.style.color = 'red';
+        fullDesc.value = '';
+        
+        // Scroll to first error
+        const firstError = document.querySelector('.is-invalid');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      try {
+        const { spec, desc } = buildPipeOutput();
+        const category = document.getElementById('category').value;
+        
+        // Apply truncation only to first output
+        const shortSpec = truncateSpec(spec.split(' '), category);
+        
+        output.value = shortSpec;
+        fullDesc.value = desc;
+        
+        if (shortSpec.length > 40) {
+          output.style.color = 'red';
+        }
+
+        // Update counter with final value
+        updateCharCounter();
+      } catch (error) {
+        output.value = 'Error generating specification: ' + error.message;
+        output.style.color = 'red';
+        fullDesc.value = '';
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('pipesForm').reset();
+      document.querySelectorAll('.hidden').forEach(el => el.classList.add('hidden'));
+      ['custom-fitting-material', 'custom-flex-material'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+      document.getElementById('output').value = '';
+      document.getElementById('fullDescription').value = '';
+      document.getElementById('outputCharCount').textContent = '0/40 characters';
+      document.getElementById('output').style.color = 'inherit';
+      document.getElementById('validationSummary').style.display = 'none';
+      document.getElementById('category').dispatchEvent(new Event('change'));
+    }
+    
+    // Placeholder for specList functionality
+    const specList = {
+      add: function() {
+        const output = document.getElementById('output').value;
+        if (output && output !== 'Please correct the highlighted fields') {
+          alert(`Added to list: ${output}`);
+        } else {
+          alert('Please generate a valid specification first');
+        }
+      }
+    };
+  </script>
+   <script src="shared-specs.js"></script>
+</body>
+</html>

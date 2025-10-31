@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Cylinders Specification</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #output { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-word;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 38px;
+        }
+        
+        #fullDescription {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            min-height: 38px;
+        }
+        
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+        
+        #custom-gas-group { 
+            display: none; 
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 3px solid #dee2e6;
+        }
+        
+        .form-section { 
+            margin-bottom: 1.5rem; 
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .output-group {
+            margin-top: 20px;
+        }
+        .char-limit { color: red; }
+        .is-invalid { border-color: #dc3545 !important; }
+        .invalid-feedback { display: none; }
+        .navbar-logo {
+        height: 40px; 
+        width: auto;
+    }
+    .navbar-logo {
+  height: 50px;
+  width: auto;
+}
+  </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Gas Cylinders Specification</h1>
+        <form id="cylinderForm">
+            <!-- Gas Type & Capacity Section -->
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Gas Type:</label>
+                        <div class="invalid-feedback">Gas Type is required</div>
+                        <select class="form-control" id="gas-type" required>
+                            <option value="">-- Required --</option>
+                            <option>Ammonia</option>
+                            <option>Refrigerant</option>
+                            <option>Nitrogen</option>
+                            <option>Oxygen</option>
+                            <option>Argon</option>
+                            <option>Helium</option>
+                            <option>Carbon Dioxide</option>
+                            <option>Acetylene</option>
+                            <option>Propane</option>
+                            <option>Hydrogen</option>
+                            <option>Methane</option>
+                            <option>Butane</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="col-md-12 form-group" id="custom-gas-group">
+                            <input type="text" class="form-control" id="custom-gas" placeholder="Enter custom gas type">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 form-group">
+                        <label id="capacityLabel">Capacity:</label>
+                        <input type="number" class="form-control" id="capacity" step="0.1" min="0" required>
+                        <div class="invalid-feedback">Capacity is required</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Details -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label>Additional Details:</label>
+                    <textarea class="form-control" id="details" rows="3"></textarea>
+                </div>
+            </div>
+
+            <!-- Character Counter -->
+            <div class="form-group">
+                <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" onclick="generateSpec()">Generate Name</button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+            </div>
+        </form>
+
+        <div class="output-group">
+            <!-- Changed from div to textarea -->
+            <textarea id="output" class="mt-4 form-control" rows="2" placeholder="Generated specification will appear here"></textarea>
+            <div id="output1" class="mt-4">
+                <label>Full description:</label>
+                <!-- Removed readonly attribute -->
+                <textarea class="form-control" id="fullDescription" rows="4"></textarea>
+            </div>
+        </div>
+    </div> 
+    
+    <script src="shared-specs.js"></script>
+    <script>
+        const gasUnitMap = {
+            'Oxygen': 'M³',
+            'Acetylene': 'M³',
+            'Nitrogen': 'M³',
+            'Argon': 'M³',
+            'Helium': 'M³',
+            'Hydrogen': 'M³',
+            'Methane': 'M³'
+        };
+
+        const removalOrder = ['details', 'capacity'];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('gas-type').addEventListener('change', function() {
+                const customGroup = document.getElementById('custom-gas-group');
+                customGroup.style.display = this.value === 'other' ? 'block' : 'none';
+                if (this.value !== 'other') document.getElementById('custom-gas').value = '';
+
+                const selectedGas = this.value;
+                const unit = gasUnitMap[selectedGas] || 'KG';
+                document.getElementById('capacityLabel').textContent = `Capacity (${unit}):`;
+                updateLiveCounter();
+            });
+
+            document.querySelectorAll('#capacity, #details, #custom-gas').forEach(element => {
+                element.addEventListener('input', updateLiveCounter);
+            });
+
+            // Add event listener for output textarea
+            document.getElementById('output').addEventListener('input', updateLiveCounter);
+        });
+
+        function buildSpec() {
+            const parts = [];
+            const fullParts = [];
+            
+            // Gas Type
+            const gasType = document.getElementById('gas-type').value;
+            const customGas = document.getElementById('custom-gas').value;
+            if (!gasType) throw new Error('Gas Type is required');
+            
+            const finalGasType = gasType === 'other' 
+                ? customGas.toUpperCase() 
+                : gasType.toUpperCase();
+            
+            parts.push({ key: 'gas', value: `${finalGasType} CYLINDER` });
+            fullParts.push(`${finalGasType} CYLINDER`);
+
+            // Capacity
+            const capacity = document.getElementById('capacity').value;
+            if (!capacity) throw new Error('Capacity is required');
+            
+            const unit = gasUnitMap[gasType] || 'KG';
+            parts.push({ key: 'capacity', value: `${capacity} ${unit}` });
+            fullParts.push(`${capacity} ${unit}`);
+
+            // Additional Details
+            const details = document.getElementById('details').value;
+            if (details) {
+                parts.push({ key: 'details', value: details.toUpperCase() });
+                fullParts.push(details);
+            }
+
+            return {
+                shortSpec: truncateSpec(parts, removalOrder),
+                fullSpec: fullParts.join(' ')
+            };
+        }
+
+        function truncateSpec(fields, order) {
+            let specString = fields.map(f => f.value).join(' ');
+            while (specString.length > 40 && fields.length > 0) {
+                const fieldToRemove = order.find(key => 
+                    fields.some(f => f.key === key)
+                );
+                if (!fieldToRemove) break;
+                
+                const index = fields.findIndex(f => f.key === fieldToRemove);
+                fields.splice(index, 1);
+                specString = fields.map(f => f.value).join(' ');
+            }
+            return specString;
+        }
+
+        function updateLiveCounter() {
+            try {
+                const output = document.getElementById('output');
+                const outputText = output.value;
+                const count = outputText.length;
+                document.getElementById('charCounter').textContent = 
+                    `${count}/40 characters`;
+                document.getElementById('charCounter').style.color = 
+                    count > 40 ? 'red' : '#6c757d';
+            } catch {
+                document.getElementById('charCounter').textContent = '0/40 characters';
+            }
+        }
+
+        function generateSpec() {
+            const output = document.getElementById('output');
+            const fullDesc = document.getElementById('fullDescription');
+            
+            // Clear previous states
+            output.value = '';
+            output.style.color = 'inherit';
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+            try {
+                const { shortSpec, fullSpec } = buildSpec();
+                
+                output.value = shortSpec;
+                output.style.color = shortSpec.length > 40 ? 'red' : 'inherit';
+                fullDesc.value = fullSpec;
+
+                // Update counter with final value
+                updateLiveCounter();
+
+            } catch (error) {
+                output.value = error.message;
+                output.style.color = 'red';
+                fullDesc.value = '';
+                
+                // Highlight invalid fields
+                if (error.message.includes('Gas Type')) {
+                    document.getElementById('gas-type').classList.add('is-invalid');
+                }
+                if (error.message.includes('Capacity')) {
+                    document.getElementById('capacity').classList.add('is-invalid');
+                }
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('cylinderForm').reset();
+            document.getElementById('custom-gas-group').style.display = 'none';
+            document.getElementById('output').value = '';
+            document.getElementById('fullDescription').value = '';
+            document.getElementById('charCounter').textContent = '0/40 characters';
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            
+            // Reset output color
+            document.getElementById('output').style.color = 'inherit';
+        }
+    </script>
+</body>
+</html>

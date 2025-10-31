@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machines Specification Generator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dynamic-section { display: none; }
+        #output { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-word;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 38px;
+            font-weight: bold;
+        }
+        #fullDescription {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            min-height: 38px;
+            font-weight: bold;
+        }
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        label {
+            font-weight: 500;
+            color: #495057;
+        }
+        .output-group {
+            margin-top: 20px;
+        }
+        .is-invalid { border-color: #dc3545 !important; }
+        .invalid-feedback { display: none; }
+        .navbar-logo {
+            height: 50px;
+            width: auto;
+        }
+        .input-group-text { 
+            font-weight: bold;
+            background-color: #e9ecef;
+        }
+        .dimension-row { margin-bottom: 10px; }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        .card-header {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #2980b9;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2471a3;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            border-color: #7f8c8d;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+            border-color: #718093;
+        }
+        .material-other {
+            display: none;
+            margin-top: 10px;
+        }
+        .input-group-unit {
+            width: 80px;
+        }
+        .output-label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .section-title {
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .input-group {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="https://via.placeholder.com/150x50?text=Company+Logo" alt="Company Logo" class="navbar-logo">
+      </a>
+      <span class="navbar-text">
+        <i class="fas fa-tools"></i> Machines Specification Generator
+      </span>
+    </div>
+  </nav>
+
+  <div class="container mt-3">
+      <h1 class="mb-4 text-center"><i class="fas fa-cogs"></i> Machines Specification Generator</h1>
+      
+      <div class="card">
+          <div class="card-header">
+              <i class="fas fa-edit"></i> Specification Details
+          </div>
+          <div class="card-body">
+              <form id="machineForm" novalidate>
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="section-title"><i class="fas fa-cube"></i> Core Properties</div>
+                          
+                          <div class="form-group">
+                              <label><i class="fas fa-layer-group"></i> Material:</label>
+                              <select class="form-control" id="material" required>
+                                  <option value="">-- Select Material --</option>
+                                  <option value="SS">Stainless Steel (SS)</option>
+                                  <option value="AL">Aluminum (AL)</option>
+                                  <option value="GI">Galvanized Iron (GI)</option>
+                                  <option value="CU">Copper (CU)</option>
+                                  <option value="MS">Mild Steel (MS)</option>
+                                  <option value="PLASTIC">Plastic</option>
+                                  <option value="other">Other Material</option>
+                              </select>
+                              <div class="material-other">
+                                  <input type="text" class="form-control mt-2" id="custom-material" placeholder="Enter custom material">
+                              </div>
+                          </div>
+                          
+                          <div class="form-group">
+                              <label><i class="fas fa-tag"></i> Product Type:</label>
+                              <select id="product-type" class="form-control" required onchange="toggleSections()">
+                                  <option value="">-- Required --</option>
+                                  <option value="machine">Machine</option>
+                                  <option value="sensor">Sensor</option>
+                              </select>
+                              <div class="invalid-feedback">Please select product type</div>
+                          </div>
+                          
+                          <div class="form-group">
+                              <label><i class="fas fa-industry"></i> Make (Brand):</label>
+                              <input type="text" class="form-control" id="make" required>
+                              <div class="invalid-feedback">Make required</div>
+                          </div>
+                          
+                          <div class="form-group">
+                              <label><i class="fas fa-barcode"></i> Model/Serial #:</label>
+                              <input type="text" class="form-control" id="model" required>
+                              <div class="invalid-feedback">Model/Serial required</div>
+                          </div>
+                      </div>
+                      
+                      <div class="col-md-6">
+                          <div id="machine-section" class="dynamic-section">
+                              <div class="section-title"><i class="fas fa-server"></i> Machine Properties</div>
+                              
+                              <div class="form-group">
+                                  <label><i class="fas fa-desktop"></i> Machine Type:</label>
+                                  <input type="text" class="form-control" id="machine-type" required placeholder="e.g., DRILLING">
+                                  <div class="invalid-feedback">Machine type required</div>
+                              </div>
+                              
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label><i class="fas fa-bolt"></i> Power:</label>
+                                          <div class="input-group">
+                                              <input type="number" class="form-control" id="power" min="0" placeholder="Value">
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">W</span>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label><i class="fas fa-compress-arrows-alt"></i> Dimensions:</label>
+                                          <div class="input-group">
+                                              <input type="text" class="form-control" id="dim1" placeholder="L">
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">X</span>
+                                              </div>
+                                              <input type="text" class="form-control" id="dim2" placeholder="W">
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">X</span>
+                                              </div>
+                                              <input type="text" class="form-control" id="dim3" placeholder="H">
+                                          </div>
+                                          <select class="form-control mt-2" id="dim-unit">
+                                              <option value="MM">MM</option>
+                                              <option value="M">M</option>
+                                              <option value="IN">IN</option>
+                                          </select>
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label><i class="fas fa-bolt"></i> Voltage:</label>
+                                          <div class="input-group">
+                                              <input type="number" class="form-control" id="voltage" placeholder="Value">
+                                              <select class="form-control input-group-unit" id="voltage-unit">
+                                                  <option value="V">V</option>
+                                                  <option value="kV">kV</option>
+                                                  <option value="mV">mV</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label><i class="fas fa-bolt"></i> Current:</label>
+                                          <div class="input-group">
+                                              <input type="number" class="form-control" id="current" placeholder="Value">
+                                              <select class="form-control input-group-unit" id="current-unit">
+                                                  <option value="A">A</option>
+                                                  <option value="kA">kA</option>
+                                                  <option value="mA">mA</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <div id="sensor-section" class="dynamic-section">
+                              <div class="section-title"><i class="fas fa-satellite-dish"></i> Sensor Properties</div>
+                              
+                              <div class="form-group">
+                                  <label><i class="fas fa-wifi"></i> Sensor Type:</label>
+                                  <input type="text" class="form-control" id="sensor-type" required>
+                                  <div class="invalid-feedback">Sensor type required</div>
+                              </div>
+                              
+                              <div class="form-group">
+                                  <label><i class="fas fa-ruler"></i> Range:</label>
+                                  <div class="input-group">
+                                      <input type="number" class="form-control" id="range" min="0">
+                                      <div class="input-group-append">
+                                          <span class="input-group-text">M</span>
+                                      </div>
+                                  </div>
+                                  <div class="invalid-feedback">Range required</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="section-title"><i class="fas fa-info-circle"></i> Additional Details</div>
+                  
+                  <div class="form-group">
+                      <label><i class="fas fa-file-alt"></i> Technical Details:</label>
+                      <textarea class="form-control" id="tech-details" rows="3" placeholder="e.g., AC/DC, RPM, IP Rating"></textarea>
+                  </div>
+                  
+                  <div class="form-group">
+                      <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+                  </div>
+                  
+                  <div class="text-center mt-4">
+                      <button type="button" class="btn btn-primary btn-lg mr-3" onclick="generateSpec()">
+                          <i class="fas fa-cog"></i> Generate Name
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-lg" onclick="resetForm()">
+                          <i class="fas fa-redo"></i> Reset
+                      </button>
+                  </div>
+              </form>
+          </div>
+      </div>
+      
+      <div class="card mt-4">
+          <div class="card-header">
+              <i class="fas fa-file-code"></i> Generated Specification
+          </div>
+          <div class="card-body">
+              <div class="form-group">
+                  <div class="output-label"><i class="fas fa-text-height"></i> Compact Name (max 40 characters):</div>
+                  <textarea id="output" class="form-control" rows="2" placeholder="Generated specification will appear here"></textarea>
+              </div>
+              
+              <div class="form-group mt-4">
+                  <div class="output-label"><i class="fas fa-align-left"></i> Full Description:</div>
+                  <textarea class="form-control" id="fullDescription" rows="4" placeholder="Complete description will appear here"></textarea>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <footer class="text-center mt-5 mb-4 text-muted">
+      <p>Machines Specification Generator v2.0 | © 2023 Company Name</p>
+  </footer>
+
+  <script>
+      // Abbreviation mapping
+      const abbreviations = {
+          'STAINLESS STEEL': 'SS',
+          'ALUMINIUM': 'AL',
+          'ALUMINUM': 'AL',
+          'GALVANIZED IRON': 'GI',
+          'COPPER': 'CU',
+          'MILD STEEL': 'MS',
+          'METER': 'M',
+          'METRE': 'M',
+          'MILLIMETER': 'MM',
+          'MILLIMETRE': 'MM',
+          'SQUARE MILLIMETER': 'SQMM',
+          'VOLT': 'V',
+          'VOLTS': 'V',
+          'AMPERE': 'A',
+          'AMPERES': 'A',
+          'WATT': 'W',
+          'WATTS': 'W',
+          'INCH': 'IN',
+          'INCHES': 'IN',
+          'FOOT': 'FT',
+          'FEET': 'FT',
+          'HORIZONTAL': 'HORIZ',
+          'VERTICAL': 'VERT',
+          'ASSEMBLY': 'ASSY',
+          'HYDRAULIC': 'HYD',
+          'PNEUMATIC': 'PU',
+          'ALTERNATING CURRENT': 'AC',
+          'DIRECT CURRENT': 'DC'
+      };
+
+      // Removal priority (least important first)
+      const removalOrders = {
+          'machine': ['tech-details', 'current', 'voltage', 'dimensions', 'power', 'material'],
+          'sensor': ['tech-details', 'dimensions', 'range']
+      };
+
+      document.addEventListener('DOMContentLoaded', function() {
+          // Show/hide custom material field
+          document.getElementById('material').addEventListener('change', function() {
+              const show = this.value === 'other';
+              document.querySelector('.material-other').style.display = show ? 'block' : 'none';
+          });
+          
+          // Input validation cleanup
+          document.querySelectorAll('input, select, textarea').forEach(element => {
+              element.addEventListener('input', function() {
+                  this.classList.remove('is-invalid');
+                  updateLiveCounter();
+              });
+          });
+          
+          document.getElementById('output').addEventListener('input', updateLiveCounter);
+      });
+
+      function toggleSections() {
+          const productType = document.getElementById('product-type').value;
+          document.querySelectorAll('.dynamic-section').forEach(section => {
+              section.style.display = 'none';
+          });
+          
+          if(productType === 'machine') {
+              document.getElementById('machine-section').style.display = 'block';
+          }
+          else if(productType === 'sensor') {
+              document.getElementById('sensor-section').style.display = 'block';
+          }
+          
+          updateLiveCounter();
+      }
+
+      function validateForm() {
+          let isValid = true;
+          const requiredFields = ['product-type', 'make', 'model'];
+          const productType = document.getElementById('product-type').value;
+
+          requiredFields.forEach(id => {
+              const element = document.getElementById(id);
+              if(!element.value) {
+                  element.classList.add('is-invalid');
+                  isValid = false;
+              }
+          });
+
+          if(productType === 'machine') {
+              const machineFields = ['machine-type'];
+              machineFields.forEach(id => {
+                  const element = document.getElementById(id);
+                  if(!element.value) {
+                      element.classList.add('is-invalid');
+                      isValid = false;
+                  }
+              });
+          }
+          else if(productType === 'sensor') {
+              const sensorFields = ['sensor-type'];
+              sensorFields.forEach(id => {
+                  const element = document.getElementById(id);
+                  if(!element.value) {
+                      element.classList.add('is-invalid');
+                      isValid = false;
+                  }
+              });
+          }
+
+          return isValid;
+      }
+
+      function applyAbbreviations(input) {
+          if (!input) return '';
+          
+          // Apply word abbreviations
+          return input.split(' ').map(word => {
+              const upperWord = word.toUpperCase();
+              return abbreviations[upperWord] || word;
+          }).join(' ');
+      }
+
+      function getMaterialValue() {
+          const materialSelect = document.getElementById('material');
+          if (materialSelect.value === 'other') {
+              return document.getElementById('custom-material').value.trim();
+          }
+          return materialSelect.options[materialSelect.selectedIndex].text.split('(')[0].trim();
+      }
+
+      function buildSpec() {
+          const productType = document.getElementById('product-type').value;
+          const material = applyAbbreviations(getMaterialValue());
+          const make = document.getElementById('make').value.trim();
+          const model = document.getElementById('model').value.trim();
+          const techDetails = document.getElementById('tech-details').value.trim();
+
+          const fields = [
+              { key: 'material', value: material },
+              { key: 'make', value: make },
+              { key: 'model', value: model }
+          ];
+
+          if(productType === 'machine') {
+              let machineType = document.getElementById('machine-type').value.trim();
+              if (machineType && !machineType.toUpperCase().includes('MACHINE')) {
+                  machineType += ' MACHINE';
+              }
+              
+              const power = document.getElementById('power').value.trim();
+              const voltage = document.getElementById('voltage').value.trim();
+              const voltageUnit = document.getElementById('voltage-unit').value;
+              const current = document.getElementById('current').value.trim();
+              const currentUnit = document.getElementById('current-unit').value;
+              
+              // Format dimensions
+              let dimStr = '';
+              const dim1 = document.getElementById('dim1').value;
+              const dim2 = document.getElementById('dim2').value;
+              const dim3 = document.getElementById('dim3').value;
+              const dimUnit = document.getElementById('dim-unit').value;
+              
+              if (dim1) {
+                  dimStr = dim1;
+                  if (dim2) dimStr += `X${dim2}`;
+                  if (dim3) dimStr += `X${dim3}`;
+                  dimStr += dimUnit;
+              }
+              
+              fields.push(
+                  { key: 'machine-type', value: machineType }
+              );
+              
+              if (power) fields.push({ key: 'power', value: `${power}W` });
+              if (voltage) fields.push({ key: 'voltage', value: `${voltage}${voltageUnit}` });
+              if (current) fields.push({ key: 'current', value: `${current}${currentUnit}` });
+              if (dimStr) fields.push({ key: 'dimensions', value: dimStr });
+          }
+          else if(productType === 'sensor') {
+              const sensorType = document.getElementById('sensor-type').value.trim();
+              const range = document.getElementById('range').value.trim();
+              
+              fields.push({ key: 'sensor-type', value: sensorType });
+              if (range) fields.push({ key: 'range', value: `${range}M` });
+          }
+          
+          if (techDetails) fields.push({ key: 'tech-details', value: techDetails });
+
+          return {
+              fields: fields.filter(f => f.value),
+              fullSpec: buildFullDescription()
+          };
+      }
+
+      function buildFullDescription() {
+          const parts = [];
+          const productType = document.getElementById('product-type').value;
+          
+          // Material
+          const material = applyAbbreviations(getMaterialValue());
+          if (material) parts.push(material);
+          
+          // Make
+          const make = document.getElementById('make').value.trim();
+          if (make) parts.push(make);
+          
+          // Product type specific
+          if (productType === 'machine') {
+              let machineType = document.getElementById('machine-type').value.trim();
+              if (machineType && !machineType.toUpperCase().includes('MACHINE')) {
+                  machineType += ' MACHINE';
+              }
+              if (machineType) parts.push(machineType);
+              
+              const power = document.getElementById('power').value.trim();
+              if (power) parts.push(power + 'W');
+              
+              const voltage = document.getElementById('voltage').value.trim();
+              const voltageUnit = document.getElementById('voltage-unit').value;
+              if (voltage) parts.push(voltage + voltageUnit);
+              
+              const current = document.getElementById('current').value.trim();
+              const currentUnit = document.getElementById('current-unit').value;
+              if (current) parts.push(current + currentUnit);
+              
+              // Dimensions
+              const dim1 = document.getElementById('dim1').value;
+              const dim2 = document.getElementById('dim2').value;
+              const dim3 = document.getElementById('dim3').value;
+              const dimUnit = document.getElementById('dim-unit').value;
+              if (dim1) {
+                  let dimStr = dim1;
+                  if (dim2) dimStr += `X${dim2}`;
+                  if (dim3) dimStr += `X${dim3}`;
+                  dimStr += dimUnit;
+                  parts.push(dimStr);
+              }
+          }
+          else if (productType === 'sensor') {
+              const sensorType = document.getElementById('sensor-type').value.trim();
+              if (sensorType) parts.push(sensorType);
+              
+              const range = document.getElementById('range').value.trim();
+              if (range) parts.push(range + 'M');
+          }
+          
+          // Model
+          const model = document.getElementById('model').value.trim();
+          if (model) parts.push(model);
+          
+          // Tech details
+          const techDetails = document.getElementById('tech-details').value.trim();
+          if (techDetails) parts.push(applyAbbreviations(techDetails));
+
+          return parts.filter(p => p).join(' ').toUpperCase();
+      }
+
+      function truncateSpec(fields, productType) {
+          let currentFields = [...fields];
+          let specString = currentFields.map(f => f.value).join(' ');
+          const order = removalOrders[productType] || [];
+
+          // Remove fields in priority order until under 40 chars
+          while(specString.length > 40 && currentFields.length > 0) {
+              const fieldToRemove = order.find(key => 
+                  currentFields.some(f => f.key === key)
+              );
+              
+              if(!fieldToRemove) break;
+
+              const index = currentFields.findIndex(f => f.key === fieldToRemove);
+              if (index !== -1) {
+                  currentFields.splice(index, 1);
+                  specString = currentFields.map(f => f.value).join(' ');
+              } else {
+                  break;
+              }
+          }
+          
+          return specString;
+      }
+
+      function updateLiveCounter() {
+          try {
+              const output = document.getElementById('output');
+              const outputText = output.value;
+              const count = outputText.length;
+              
+              document.getElementById('charCounter').textContent = `${count}/40 characters`;
+              document.getElementById('charCounter').style.color = count > 40 ? 'red' : '#6c757d';
+          } catch {
+              document.getElementById('charCounter').textContent = '0/40 characters';
+          }
+      }
+
+      function generateSpec() {
+          const output = document.getElementById('output');
+          const fullDesc = document.getElementById('fullDescription');
+          
+          output.value = '';
+          output.style.color = 'inherit';
+          fullDesc.value = '';
+          document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+          if(!validateForm()) {
+              output.style.color = 'red';
+              output.value = 'Please correct the highlighted fields';
+              return;
+          }
+
+          try {
+              const productType = document.getElementById('product-type').value;
+              const { fields, fullSpec } = buildSpec();
+              const shortSpec = truncateSpec(fields, productType);
+
+              output.value = shortSpec.toUpperCase();
+              fullDesc.value = fullSpec;
+
+              if(shortSpec.length > 40) {
+                  output.style.color = 'red';
+                  output.value += ' (CHARACTER LIMIT EXCEEDED)';
+              }
+
+              updateLiveCounter();
+
+          } catch(error) {
+              output.style.color = 'red';
+              output.value = 'Error generating specification';
+              console.error(error);
+          }
+      }
+
+      function resetForm() {
+          document.getElementById('machineForm').reset();
+          document.querySelectorAll('.dynamic-section').forEach(section => {
+              section.style.display = 'none';
+          });
+          document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+          document.getElementById('charCounter').textContent = '0/40 characters';
+          document.getElementById('output').value = '';
+          document.getElementById('fullDescription').value = '';
+          document.getElementById('material').value = '';
+          document.querySelector('.material-other').style.display = 'none';
+          document.getElementById('output').style.color = 'inherit';
+      }
+  </script>
+</body>
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanical Parts</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .component-section { display: none; }
+        .active-section { display: block; }
+        #output, #fullDescription { 
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-word;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 38px;
+        }
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+        .conditional-field { display: none; }
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        label {
+            font-weight: 500;
+            color: #495057;
+        }
+        .output-group {
+            margin-top: 20px;
+        }
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+        .navbar-logo {
+            height: 50px;
+            width: auto;
+        }
+        .char-limit {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+    <div class="container mt-5">
+        <h1 class="mb-4">Mechanical Parts</h1>
+        <form id="componentForm">
+            <div class="form-group">
+                <label>Component Type:</label>
+                <select id="component-type" class="form-control" onchange="toggleFields()" required>
+                    <option value="">Select Type</option>
+                    <option>Gear</option>
+                    <option>Bearing</option>
+                    <option>Shaft</option>
+                    <option>Valve</option>
+                    <option>Coupling</option>
+                    <div class="invalid-feedback">Please select a Component Type</div>
+                </select>
+            </div>
+
+            <!-- Gear Section -->
+            <div id="gear-section" class="component-section form-section">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Gear Type:</label>
+                        <select class="form-control" id="gear-type" required>
+                            <option value="">-- Select --</option>
+                            <option>Helical Gear</option>
+                            <option>Spur Gear</option>
+                            <option>Herringbone Gear</option>
+                            <option>Bevel Gear</option>
+                            <option>Spiral Bevel Gear</option>
+                            <option>Screw Gear</option>
+                            <option>Miter Gear</option>
+                            <option>Internal Gear</option>
+                            <option>Worm Gear</option>
+                        </select>
+                        <div class="invalid-feedback">Please select Gear Type</div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Teeth Count:</label>
+                        <input type="number" class="form-control" id="gear-teeth" required>
+                        <div class="invalid-feedback">Teeth Count is required</div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Teeth Gap (mm):</label>
+                        <input type="number" step="0.01" class="form-control" id="gear-gap" required>
+                        <div class="invalid-feedback">Teeth Gap is required</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bearing Section -->
+            <div id="bearing-section" class="component-section form-section">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Bearing Type:</label>
+                        <select class="form-control" id="bearing-type" required>
+                            <option value="">-- Select --</option>
+                            <option>Needle Bearing</option>
+                            <option>Roller Bearing</option>
+                            <option>Ball Bearing</option>
+                            <option>Plain Bearing</option>
+                            <option>Fluid Bearing</option>
+                            <option>Magnetic Bearing</option>
+                            <option>Taper Bearing</option>
+                            <option>Cylinder Bearing</option>
+                            <option>Thrust Bearing</option>
+                            <option>Angular Bearing</option>
+                            <option>Spherical Bearing</option>
+                            <option>2 Ball Bearing</option>
+                        </select>
+                        <div class="invalid-feedback">Please select Bearing Type</div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Bearing Number:</label>
+                        <input type="text" class="form-control" id="bearing-number" required>
+                        <div class="invalid-feedback">Bearing Number required</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shaft Section -->
+            <div id="shaft-section" class="component-section form-section">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Shaft Type:</label>
+                        <select class="form-control" id="shaft-type" required>
+                            <option value="">-- Select --</option>
+                            <option>Transmission Shaft</option>
+                            <option>Input Shaft</option>
+                            <option>Line Shaft</option>
+                            <option>Machine Shaft</option>
+                            <option>Spindle Shaft</option>
+                            <option>Crankshaft</option>
+                            <option>Counter Shaft</option>
+                            <option>Output Shaft</option>
+                        </select>
+                        <div class="invalid-feedback">Please select Shaft Type</div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Technical Details:</label>
+                        <input type="text" class="form-control" id="shaft-details" required>
+                        <div class="invalid-feedback">Technical Details required</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Valve Section -->
+            <div id="valve-section" class="component-section form-section">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Valve Type:</label>
+                        <select class="form-control" id="valve-type" required>
+                            <option value="">-- Select --</option>
+                            <option>Ball Valve</option>
+                            <option>Globe Valve</option>
+                            <option>Y-globe Valve</option>
+                            <option>Needle Valve</option>
+                            <option>Check Valve</option>
+                            <option>NRV</option>
+                            <option>Safety Valve</option>
+                            <option>Butterfly Valve</option>
+                            <option>Diaphragm Valve</option>
+                            <option>Lift Check Valve</option>
+                            <option>Swing Check Valve</option>
+                            <option>Plug Valve</option>
+                            <option>Pinch Valve</option>
+                        </select>
+                        <div class="invalid-feedback">Please select Valve Type</div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Inner Diameter:</label>
+                        <input type="text" class="form-control" id="valve-diameter" required>
+                        <div class="invalid-feedback">Inner Diameter required</div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="form-check mt-4">
+                            <input type="checkbox" class="form-check-input" id="valve-flanged">
+                            <label class="form-check-label">Flanged</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row conditional-field" id="bcd-field">
+                    <div class="col-md-6 form-group">
+                        <label>BCD (Bolt Circle Diameter):</label>
+                        <input type="text" class="form-control" id="valve-bcd">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coupling Section -->
+            <div id="coupling-section" class="component-section form-section">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Coupling Type:</label>
+                        <select class="form-control" id="coupling-type" required>
+                            <option value="">-- Select --</option>
+                            <option>Fluid Coupling</option>
+                            <option>Sleeve Coupling</option>
+                            <option>Flanged Coupling</option>
+                            <option>Gear Coupling</option>
+                            <option>Universal Coupling</option>
+                            <option>Flexible Coupling</option>
+                            <option>Bellow Coupling</option>
+                            <option>Split Muff Coupling</option>
+                            <option>Fludex Coupling</option>
+                            <option>Constant Speed Coupling</option>
+                            <option>Oldham Coupling</option>
+                            <option>Camlock Coupling</option>
+                            <option>Spider Rubber Coupling</option>
+                        </select>
+                        <div class="invalid-feedback">Please select Coupling Type</div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Size:</label>
+                        <input type="text" class="form-control" id="coupling-size" required>
+                        <div class="invalid-feedback">Size required</div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label>Technical Details:</label>
+                        <input type="text" class="form-control" id="coupling-details">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Character Counter -->
+            <div class="form-group">
+                <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+            </div>
+
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" onclick="generateSpec()">Generate Specification</button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+            </div>
+        </form>
+
+        <div class="output-group">
+            <textarea id="output" class="form-control" rows="2" placeholder="Short specification will appear here"></textarea>
+            
+            <div class="mt-4">
+                <label>Full description:</label>
+                <textarea class="form-control" id="fullDescription" rows="4" placeholder="Full description will appear here"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared-specs.js"></script>
+
+    <script>
+        const removalOrders = {
+            'Gear': ['gap', 'type'],
+            'Bearing': ['number', 'type'],
+            'Shaft': ['details', 'type'],
+            'Valve': ['bcd', 'flanged', 'diameter'],
+            'Coupling': ['details', 'size']
+        };
+    
+        let inSync = false; // To prevent infinite sync loop
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize event listeners
+            document.getElementById('valve-flanged').addEventListener('change', function() {
+                document.getElementById('bcd-field').style.display = this.checked ? 'block' : 'none';
+                updateLiveCounter();
+            });
+    
+            // Dropdown validation cleanup
+            document.querySelectorAll('select').forEach(select => {
+                select.addEventListener('change', function() {
+                    if(this.value) this.classList.remove('is-invalid');
+                    updateLiveCounter();
+                });
+            });
+    
+            // Input validation cleanup
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    updateLiveCounter();
+                });
+            });
+            
+            // Add event listeners for editable outputs
+            document.getElementById('output').addEventListener('input', function() {
+                updateLiveCounter();
+                syncOutputs('output', 'fullDescription');
+            });
+            
+            document.getElementById('fullDescription').addEventListener('input', function() {
+                updateLiveCounter();
+                syncOutputs('fullDescription', 'output');
+            });
+        });
+    
+        function toggleFields() {
+            const type = document.getElementById('component-type').value.toLowerCase();
+            document.querySelectorAll('.component-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+            if(type) {
+                document.getElementById(`${type}-section`)?.classList.add('active-section');
+            }
+            updateLiveCounter();
+        }
+    
+        function buildSpecFields() {
+            const type = document.getElementById('component-type').value;
+            if(!type) return [];
+            
+            const fields = [];
+            const componentType = type.toLowerCase();
+    
+            switch(componentType) {
+                case 'gear':
+                    fields.push(
+                        { key: 'gear-type', value: getValue('gear-type').toUpperCase() },
+                        { key: 'teeth', value: `${getValue('gear-teeth')}T` },
+                        { key: 'gap', value: `${getValue('gear-gap')}MM` }
+                    );
+                    break;
+                    
+                case 'bearing':
+                    fields.push(
+                        { key: 'bearing-type', value: getValue('bearing-type').toUpperCase() },
+                        { key: 'number', value: getValue('bearing-number').toUpperCase() }
+                    );
+                    break;
+                    
+                case 'shaft':
+                    fields.push(
+                        { key: 'shaft-type', value: getValue('shaft-type').toUpperCase() },
+                        { key: 'details', value: getValue('shaft-details').toUpperCase() }
+                    );
+                    break;
+                    
+                case 'valve':
+                    const isFlanged = document.getElementById('valve-flanged').checked;
+                    fields.push(
+                        { key: 'valve-type', value: getValue('valve-type').toUpperCase() },
+                        { key: 'diameter', value: `${getValue('valve-diameter')}"` }
+                    );
+                    if(isFlanged) {
+                        fields.push(
+                            { key: 'flanged', value: 'FLANGED' },
+                            { key: 'bcd', value: `BCD${getValue('valve-bcd')}"` }
+                        );
+                    }
+                    break;
+                    
+                case 'coupling':
+                    fields.push(
+                        { key: 'coupling-type', value: getValue('coupling-type').toUpperCase() },
+                        { key: 'size', value: `${getValue('coupling-size')}"` }
+                    );
+                    const details = document.getElementById('coupling-details').value;
+                    if(details) {
+                        fields.push({ key: 'details', value: details.toUpperCase() });
+                    }
+                    break;
+            }
+    
+            return fields.filter(f => f.value);
+        }
+    
+        function truncateSpec(fields, componentType) {
+            let currentFields = [...fields];
+            let specString = currentFields.map(f => f.value).join(' ');
+            const order = removalOrders[componentType] || [];
+    
+            while(specString.length > 40 && currentFields.length > 0) {
+                const fieldToRemove = order.find(key => 
+                    currentFields.some(f => f.key === key)
+                );
+                if(!fieldToRemove) break;
+    
+                const index = currentFields.findIndex(f => f.key === fieldToRemove);
+                currentFields.splice(index, 1);
+                specString = currentFields.map(f => f.value).join(' ');
+            }
+            
+            return specString;
+        }
+    
+        function updateLiveCounter() {
+            try {
+                const output = document.getElementById('output');
+                const count = output.value.length;
+                document.getElementById('charCounter').textContent = 
+                    `${count}/40 characters`;
+                document.getElementById('charCounter').style.color = 
+                    count > 40 ? 'red' : '#6c757d';
+            } catch {
+                document.getElementById('charCounter').textContent = '0/40 characters';
+            }
+        }
+        
+        function syncOutputs(sourceId, targetId) {
+            if (inSync) return;
+            inSync = true;
+            
+            const source = document.getElementById(sourceId);
+            const target = document.getElementById(targetId);
+            
+            if (targetId === 'output') {
+                // Truncate if over 40 characters
+                target.value = source.value.substring(0, 40);
+            } else {
+                // Full description - no truncation
+                target.value = source.value;
+            }
+            
+            updateLiveCounter();
+            inSync = false;
+        }
+    
+        function validateForm() {
+            let isValid = true;
+            const componentType = document.getElementById('component-type');
+            const componentTypeValue = componentType.value;
+            
+            // Validate component type
+            if(!componentTypeValue) {
+                componentType.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                componentType.classList.remove('is-invalid');
+            }
+    
+            // Validate active section fields
+            const activeSection = document.querySelector('.component-section.active-section');
+            if(activeSection) {
+                // Validate required dropdowns
+                activeSection.querySelectorAll('select[required]').forEach(dropdown => {
+                    if(!dropdown.value) {
+                        dropdown.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                });
+    
+                // Validate required inputs
+                activeSection.querySelectorAll('input[required]').forEach(input => {
+                    if(!input.value) {
+                        input.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                });
+            }
+    
+            // Special validation for flanged valve
+            if(componentTypeValue === 'Valve' && document.getElementById('valve-flanged').checked) {
+                const bcd = document.getElementById('valve-bcd');
+                if(!bcd.value) {
+                    bcd.classList.add('is-invalid');
+                    isValid = false;
+                }
+            }
+    
+            return isValid;
+        }
+    
+        function buildFullDescription() {
+            const parts = [];
+            const componentType = document.getElementById('component-type').value;
+            if(!componentType) return '';
+            
+    
+            switch(componentType.toLowerCase()) {
+                case 'gear':
+                    parts.push(
+                        `${getValue('gear-type')}`,
+                        `${getValue('gear-teeth')} Teeth`,
+                        `${getValue('gear-gap')}mm`
+                    );
+                    break;
+                    
+                case 'bearing':
+                    parts.push(
+                        `${getValue('bearing-type')}`,
+                        `${getValue('bearing-number')}`
+                    );
+                    break;
+                    
+                case 'shaft':
+                    parts.push(
+                        `${getValue('shaft-type')}`,
+                        `${getValue('shaft-details')}`
+                    );
+                    break;
+                    
+                case 'valve':
+                    parts.push(
+                        `${getValue('valve-type')}`,
+                        `${getValue('valve-diameter')}"`
+                    );
+                    if(document.getElementById('valve-flanged').checked) {
+                        parts.push(
+                            `Flanged`,
+                            `BCD ${getValue('valve-bcd')}"`
+                        );
+                    }
+                    break;
+                    
+                case 'coupling':
+                    parts.push(
+                        `${getValue('coupling-type')}`,
+                        `${getValue('coupling-size')}"`
+                    );
+                    const details = document.getElementById('coupling-details').value;
+                    if(details) parts.push(`Technical Details: ${details}`);
+                    break;
+            }
+    
+            return parts.join(' ');
+        }
+    
+        function generateSpec() {
+            const output = document.getElementById('output');
+            const fullDesc = document.getElementById('fullDescription');
+            
+            // Reset states
+            output.value = '';
+            fullDesc.value = '';
+            output.style.color = 'inherit';
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    
+            try {
+                if(!validateForm()) {
+                    throw new Error('Please fill all required fields');
+                }
+    
+                const componentType = document.getElementById('component-type').value;
+                const fields = buildSpecFields();
+                const shortSpec = truncateSpec(fields, componentType);
+                const fullSpec = buildFullDescription();
+    
+                output.value = shortSpec;
+                fullDesc.value = fullSpec;
+    
+                if(shortSpec.length > 40) {
+                    output.style.color = 'red';
+                }
+                
+                updateLiveCounter();
+    
+            } catch(error) {
+                output.style.color = 'red';
+                output.value = error.message;
+                fullDesc.value = '';
+                updateLiveCounter();
+            }
+        }
+    
+        function resetForm() {
+            document.getElementById('componentForm').reset();
+            document.querySelectorAll('.component-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.getElementById('charCounter').textContent = '0/40 characters';
+            document.getElementById('output').value = '';
+            document.getElementById('fullDescription').value = '';
+            document.getElementById('bcd-field').style.display = 'none';
+            updateLiveCounter();
+        }
+    
+        function getValue(id) {
+            const element = document.getElementById(id);
+            return element ? element.value.trim() : '';
+        }
+    </script>
+</body>
+</html>

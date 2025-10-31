@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Product Specification System">
+  <meta property="og:title" content="Product Specification System">
+  <meta property="og:description" content="Generate standardized product names based on categories">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <title>Product Specification System</title>
+
+  <style>
+    :root {
+      --bs-primary: #2c3e50;
+      --bs-secondary: #6c757d;
+      --bs-accent: #3498db;
+      --bs-bg: #f8f9fa;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bs-bg);
+      color: var(--bs-secondary);
+    }
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .navbar-brand {
+      color: var(--bs-primary);
+      font-weight: 600;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+    .page-header {
+      padding: 4rem 0;
+      background-color: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    .page-header h1 {
+      color: var(--bs-primary);
+      font-weight: 700;
+      font-size: 2.5rem;
+      letter-spacing: -1px;
+    }
+    .page-header .lead {
+      color: var(--bs-secondary);
+      font-weight: 400;
+    }
+    .card {
+      border: none;
+      border-radius: 0.75rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .card .card-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--bs-accent);
+    }
+    .card-title {
+      font-weight: 600;
+      color: var(--bs-primary);
+      margin-bottom: 0.5rem;
+    }
+    .card-text {
+      font-size: 0.9rem;
+      color: var(--bs-secondary);
+      opacity: 0.8;
+    }
+    footer {
+      padding: 2rem 0;
+      background-color: #fff;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .navbar-logo {
+  height: 50px;
+  width: auto;
+}
+  </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="page-header text-center">
+    <div class="container">
+      <h1 class="mb-3">Product Specification System</h1>
+      <p class="lead mb-0">Select a category to generate standardized specifications</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="row g-4">
+      <!-- Electrical -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="electrical.html" class="text-decoration-none" aria-label="Electrical Products">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon">
+              <i class="bi bi-plug-fill"></i>
+            </div>
+            <h2 class="h5 card-title">Electrical</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Fasteners -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="fasteners.html" class="text-decoration-none" aria-label="Fasteners">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-gear-fill"></i></div>
+            <h2 class="h5 card-title">Fasteners</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Fire Fighting -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="fire-fighting.html" class="text-decoration-none" aria-label="Fire Fighting">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-fire"></i></div>
+            <h2 class="h5 card-title">Fire Fighting</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Gas Cylinders -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="gas-cylinders.html" class="text-decoration-none" aria-label="Gas Cylinders">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-fuel-pump-fill"></i></div>
+            <h2 class="h5 card-title">Gas Cylinders</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Machines -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="machines.html" class="text-decoration-none" aria-label="Machines">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-building"></i></div>
+            <h2 class="h5 card-title">Machines</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Pipes & Fittings -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="pipes.html" class="text-decoration-none" aria-label="Pipes & Fittings">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-diagram-3"></i></div>
+            <h2 class="h5 card-title">Pipes & Fittings</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Mechanical Parts -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="mechanical-parts.html" class="text-decoration-none" aria-label="Mechanical Parts">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-shuffle"></i></div>
+            <h2 class="h5 card-title">Mechanical Parts</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Metals -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="metals.html" class="text-decoration-none" aria-label="Metals">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-hammer"></i></div>
+            <h2 class="h5 card-title">Metals</h2>
+          </div>
+        </a>
+      </div>
+      <!-- Pumps & Motors -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="pumps-motors.html" class="text-decoration-none" aria-label="Pumps & Motors">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-funnel-fill"></i></div>
+            <h2 class="h5 card-title">Pumps & Motors</h2>
+          </div>
+        </a>
+      </div>
+    </div>
+    <!-- Bearings -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="bearing.html" class="text-decoration-none" aria-label=" Bearings">
+          <div class="card text-center p-4 h-100">
+            <div class="card-icon"><i class="bi bi-funnel-fill"></i></div>
+            <h2 class="h5 card-title">Bearings</h2>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p class="mb-0">&copy; 2025 CompanyName. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="shared-specs.js"></script>
+</body>
+</html>

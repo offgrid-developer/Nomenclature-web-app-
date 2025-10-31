@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metals Specification Generator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #output { 
+            word-break: break-word;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            font-size: 0.9rem;
+            min-height: 60px;
+            resize: vertical;
+        }
+        .char-limit { color: red; }
+        .char-count { 
+            float: right; 
+            font-size: 0.9rem; 
+        }
+        .hidden { display: none; }
+        .is-invalid { border-color: #dc3545 !important; }
+        .invalid-feedback { display: none; }
+        #fullDescription {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            min-height: 38px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        label {
+            font-weight: 500;
+            color: #495057;
+        }
+        .output-group {
+            margin-top: 20px;
+        }
+        .custom-type-input {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 3px solid #dee2e6;
+        }
+        .navbar-logo {
+            height: 50px;
+            width: auto;
+        }
+        .dimension-input {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        .dimension-value {
+            width: 70%;
+            margin-right: 5px;
+        }
+        .dimension-unit {
+            width: 30%;
+        }
+        .unit-option {
+            white-space: nowrap;
+        }
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="logo.jpeg" alt="Company Logo" class="navbar-logo">
+      </a>
+    </div>
+  </nav>
+  
+  <div class="container mt-3">
+    <h1 class="mb-4">Metals Specification Generator</h1>
+    <form id="metalForm" novalidate>
+      <!-- Material Selection -->
+      <div class="form-row">
+        <div class="col-md-6 form-group">
+          <label>Material:</label>
+          <select class="form-control" id="material" required>
+            <option value="">-- Select --</option>
+            <option>Mild Steel</option>
+            <option>Stainless Steel</option>
+            <option>Aluminum</option>
+            <option>Galvanized Steel</option>
+            <option>Copper</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" class="form-control mt-2 hidden" id="custom-material" placeholder="Enter custom material">
+          <div class="invalid-feedback">Please select or enter a material</div>
+        </div>
+      </div>
+
+      <!-- Metal Type -->
+      <div class="form-row">
+        <div class="col-md-6 form-group">
+          <label>Metal Type:</label>
+          <select class="form-control" id="metal-type" required>
+            <option value="">-- Required --</option>
+            <option>Hollow Section</option>
+            <option>H-Channel</option>
+            <option>U-Channel</option>
+            <option>Checkered Plate</option>
+            <option>Sheet</option>
+            <option>Wire Mesh</option>
+            <option>T-Bar</option>
+            <option>Angle Line</option>
+            <option>Flat Bar</option>
+            <option>Round Bar</option>
+            <option>Square Bar</option>
+            <option>Hexagon Bar</option>
+            <option>Rebar</option>
+            <option>Half Round Bar</option>
+            <option>Half Oval Bar</option>
+            <option>Triangle Bar</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" class="form-control mt-2 hidden" id="custom-metal-type" placeholder="Enter custom metal type">
+          <div class="invalid-feedback">Please select or enter a metal type</div>
+        </div>
+      </div>
+
+      <!-- Dimensions with unit selection -->
+      <div class="form-row">
+        <div class="col-md-3 form-group">
+          <label>Length:</label>
+          <div class="dimension-input">
+            <input type="number" class="form-control dimension-value" id="length" min="0" step="0.01" placeholder="Value">
+            <select class="form-control dimension-unit" id="length-unit">
+                <option value="">Unit</option>
+                <option value="MM">MM</option>
+                <option value="IN">Inches</option>
+                <option value="M">M</option>
+                <option value="KG/M">KG/M</option>
+                <option value="other">Other</option>
+            </select>
+          </div>
+          <input type="text" class="form-control mt-1 hidden" id="custom-length-unit" placeholder="Custom unit">
+        </div>
+        
+        <div class="col-md-3 form-group">
+          <label>Width:</label>
+          <div class="dimension-input">
+            <input type="number" class="form-control dimension-value" id="width" min="0" step="0.01" placeholder="Value">
+            <select class="form-control dimension-unit" id="width-unit">
+                <option value="">Unit</option>
+                <option value="MM">MM</option>
+                <option value="IN">Inches</option>
+                <option value="M">M</option>
+                <option value="KG/M">KG/M</option>
+                <option value="other">Other</option>
+            </select>
+          </div>
+          <input type="text" class="form-control mt-1 hidden" id="custom-width-unit" placeholder="Custom unit">
+        </div>
+        
+        <div class="col-md-3 form-group">
+          <label>Height:</label>
+          <div class="dimension-input">
+            <input type="number" class="form-control dimension-value" id="height" min="0" step="0.01" placeholder="Value">
+            <select class="form-control dimension-unit" id="height-unit">
+                <option value="">Unit</option>
+                <option value="MM">MM</option>
+                <option value="IN">Inches</option>
+                <option value="M">M</option>
+                <option value="KG/M">KG/M</option>
+                <option value="other">Other</option>
+            </select>
+          </div>
+          <input type="text" class="form-control mt-1 hidden" id="custom-height-unit" placeholder="Custom unit">
+        </div>
+        
+        <div class="col-md-3 form-group">
+          <label>Thickness:</label>
+          <div class="dimension-input">
+            <input type="number" class="form-control dimension-value" id="thickness" required min="0" step="0.01" placeholder="Value">
+            <select class="form-control dimension-unit" id="thickness-unit">
+              <option value="">Unit</option>
+              <option value="MM">MM</option>
+              <option value="IN">Inches</option>
+              <option value="M">M</option>
+              <option value="KG/M">KG/M</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <input type="text" class="form-control mt-1 hidden" id="custom-thickness-unit" placeholder="Custom unit">
+          <div class="invalid-feedback">Thickness value is required</div>
+        </div>
+      </div>
+
+      <!-- Finish -->
+      <div class="form-row">
+        <div class="col-md-4 form-group">
+          <label>Finish:</label>
+          <select class="form-control" id="finish">
+            <option value="">-- None --</option>
+            <option>Powder Coated</option>
+            <option>Painted</option>
+            <option>Polished</option>
+            <option>Galvanized</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Character Counter -->
+      <div class="form-group">
+        <small id="charCounter" class="form-text text-muted char-count">0/40 characters</small>
+      </div>
+
+      <div class="mt-4">
+        <button type="button" class="btn btn-primary mr-2" onclick="generateSpec()">Generate Name</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+      </div>
+    </form>
+
+    <div class="output-group">
+      <textarea id="output" class="form-control" rows="2"></textarea>
+      <div id="output1" class="mt-4">
+        <label>Full Description:</label>
+        <textarea class="form-control" id="fullDescription" rows="4" ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const materialMap = {
+      'Mild Steel': 'MS',
+      'Stainless Steel': 'SS',
+      'Aluminum': 'AL',
+      'Galvanized Steel': 'GS',
+      'Copper': 'CU'
+    };
+
+    // Updated removal order with all dimension fields
+    const removalOrder = ['finish', 'height', 'width', 'length', 'thickness'];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Handle custom field visibility
+      const handleCustomField = (selectId, inputId) => {
+        const select = document.getElementById(selectId);
+        const input = document.getElementById(inputId);
+        
+        select.addEventListener('change', function() {
+          const show = this.value === 'other';
+          input.classList.toggle('hidden', !show);
+          if(show) input.focus();
+          updateLiveCounter();
+        });
+      };
+
+      handleCustomField('material', 'custom-material');
+      handleCustomField('metal-type', 'custom-metal-type');
+
+      // Handle custom unit visibility
+      const unitSelects = ['length', 'width', 'height', 'thickness'];
+      unitSelects.forEach(dim => {
+        const select = document.getElementById(`${dim}-unit`);
+        const input = document.getElementById(`custom-${dim}-unit`);
+        
+        select.addEventListener('change', function() {
+          const show = this.value === 'other';
+          input.classList.toggle('hidden', !show);
+          if(show) input.focus();
+          updateLiveCounter();
+        });
+      });
+
+      // Input validation cleanup
+      document.querySelectorAll('select, input').forEach(element => {
+        element.addEventListener('input', function() {
+          this.classList.remove('is-invalid');
+          updateLiveCounter();
+        });
+      });
+      
+      // Add event listener for the editable output
+      document.getElementById('output').addEventListener('input', function() {
+        const count = this.value.length;
+        document.getElementById('charCounter').textContent = `${count}/40 characters`;
+        document.getElementById('charCounter').style.color = count > 40 ? 'red' : '#6c757d';
+      });
+    });
+
+    // Convert decimal to fraction for inches
+    function decimalToFraction(decimal) {
+      const tolerance = 0.01;
+      const fractions = {
+        0.125: '1/8',
+        0.25: '1/4',
+        0.375: '3/8',
+        0.5: '1/2',
+        0.625: '5/8',
+        0.75: '3/4',
+        0.875: '7/8'
+      };
+      
+      // Check for exact matches first
+      for (let [value, fraction] of Object.entries(fractions)) {
+        const numValue = parseFloat(value);
+        if (Math.abs(decimal - numValue) < tolerance) {
+          return fraction;
+        }
+      }
+      
+      // Check for whole numbers
+      if (Math.abs(decimal - Math.round(decimal)) < tolerance) {
+        return Math.round(decimal).toString();
+      }
+      
+      // Return decimal with 2 places as fallback
+      return decimal.toFixed(2).replace(/\.00$/, '');
+    }
+
+    function validateForm() {
+      let isValid = true;
+      const requiredFields = [
+        {
+          id: 'material',
+          check: () => document.getElementById('material').value === 'other' ?
+            !!document.getElementById('custom-material').value.trim() :
+            !!document.getElementById('material').value
+        },
+        {
+          id: 'metal-type',
+          check: () => document.getElementById('metal-type').value === 'other' ?
+            !!document.getElementById('custom-metal-type').value.trim() :
+            !!document.getElementById('metal-type').value
+        },
+        {
+          id: 'thickness',
+          check: () => !!document.getElementById('thickness').value
+        }
+      ];
+
+      requiredFields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if(!field.check()) {
+          element.classList.add('is-invalid');
+          isValid = false;
+        }
+      });
+
+      return isValid;
+    }
+
+    function buildSpecFields() {
+      const fields = [];
+
+      // Material
+      const materialSelect = document.getElementById('material');
+      if (materialSelect.value) {
+        const materialValue = materialSelect.value === 'other' ?
+          document.getElementById('custom-material').value.trim().toUpperCase() :
+          materialMap[materialSelect.options[materialSelect.selectedIndex].text] || 
+          materialSelect.options[materialSelect.selectedIndex].text.toUpperCase();
+        
+        fields.push({ key: 'material', value: materialValue });
+      }
+
+      // Metal Type
+      const metalTypeSelect = document.getElementById('metal-type');
+      if (metalTypeSelect.value) {
+        const metalTypeValue = metalTypeSelect.value === 'other' ?
+          document.getElementById('custom-metal-type').value.trim().toUpperCase() :
+          metalTypeSelect.options[metalTypeSelect.selectedIndex].text.toUpperCase();
+        
+        fields.push({ key: 'type', value: metalTypeValue });
+      }
+
+      // Dimensions - now as separate fields
+      const dims = ['width', 'height', 'length', 'thickness'];
+      
+      for (const dim of dims) {
+        const value = document.getElementById(dim).value;
+        if (value) {
+          const unitSelect = document.getElementById(`${dim}-unit`);
+          let unit = unitSelect.value;
+          
+          // Handle custom units
+          if (unit === 'other') {
+            unit = document.getElementById(`custom-${dim}-unit`).value.trim();
+          }
+          
+          // Format dimension
+          let formattedValue = value;
+          if (unit === 'IN') {
+            formattedValue = decimalToFraction(parseFloat(value));
+            unit = '"'; // Use double quote for inches
+          }
+          
+          // Add unit if specified
+          const dimStr = unit ? `${formattedValue}${unit}` : formattedValue;
+          fields.push({ key: dim, value: dimStr });
+        }
+      }
+
+      // Finish
+      const finishSelect = document.getElementById('finish');
+      if(finishSelect.value) {
+        fields.push({ 
+          key: 'finish', 
+          value: finishSelect.options[finishSelect.selectedIndex].text.toUpperCase() 
+        });
+      }
+
+      return fields;
+    }
+
+    function buildFullDescription() {
+      const fields = buildSpecFields();
+      
+      // Format dimensions with " X " separator
+      let spec = '';
+      let dimensions = '';
+      
+      for (const field of fields) {
+        if (['width', 'height', 'length', 'thickness'].includes(field.key)) {
+          if (dimensions) dimensions += ' X ';
+          dimensions += field.value;
+        } else {
+          if (spec) spec += ' ';
+          spec += field.value;
+        }
+      }
+      
+      if (dimensions) {
+        if (spec) spec += ' ';
+        spec += dimensions;
+      }
+      
+      return spec;
+    }
+
+    function truncateSpec(fields) {
+      let currentFields = [...fields];
+      let specString = buildFullDescriptionFromFields(currentFields);
+      
+      while(specString.length > 40 && currentFields.length > 0) {
+        let removed = false;
+        
+        for(const key of removalOrder) {
+          const index = currentFields.findIndex(f => f.key === key);
+          if(index !== -1) {
+            currentFields.splice(index, 1);
+            removed = true;
+            break;
+          }
+        }
+        
+        if(!removed) break; // No more fields to remove
+        specString = buildFullDescriptionFromFields(currentFields);
+      }
+      
+      return specString;
+    }
+    
+    // Helper function to build description from fields
+    function buildFullDescriptionFromFields(fields) {
+      let spec = '';
+      let dimensions = '';
+      
+      for (const field of fields) {
+        if (['width', 'height', 'length', 'thickness'].includes(field.key)) {
+          if (dimensions) dimensions += ' X ';
+          dimensions += field.value;
+        } else {
+          if (spec) spec += ' ';
+          spec += field.value;
+        }
+      }
+      
+      if (dimensions) {
+        if (spec) spec += ' ';
+        spec += dimensions;
+      }
+      
+      return spec;
+    }
+
+    function updateLiveCounter() {
+      try {
+        const output = document.getElementById('output');
+        const count = output.value.length;
+        
+        document.getElementById('charCounter').textContent = `${count}/40 characters`;
+        document.getElementById('charCounter').style.color = count > 40 ? 'red' : '#6c757d';
+      } catch {
+        document.getElementById('charCounter').textContent = '0/40 characters';
+      }
+    }
+
+    function generateSpec() {
+      const output = document.getElementById('output');
+      const fullDesc = document.getElementById('fullDescription');
+      
+      // Reset states
+      output.value = '';
+      output.style.color = 'inherit';
+      document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+      if(!validateForm()) {
+        output.style.color = 'red';
+        output.value = 'Please correct the highlighted fields';
+        fullDesc.value = '';
+        return;
+      }
+
+      try {
+        const fields = buildSpecFields();
+        const shortSpec = truncateSpec(fields);
+        const fullSpec = buildFullDescription();
+
+        output.value = shortSpec;
+        fullDesc.value = fullSpec;
+
+        if(shortSpec.length > 40) {
+          output.style.color = 'red';
+        }
+        
+        // Update counter after generation
+        updateLiveCounter();
+      } catch(error) {
+        output.style.color = 'red';
+        output.value = error.message;
+        fullDesc.value = '';
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('metalForm').reset();
+      document.querySelectorAll('.hidden').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+      document.getElementById('charCounter').textContent = '0/40 characters';
+      document.getElementById('output').value = '';
+      document.getElementById('fullDescription').value = '';
+    }
+  </script>
+  <script src="shared-specs.js"></script>
+</body>
+</html>
